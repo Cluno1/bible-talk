@@ -7,6 +7,9 @@ export const useMenuStore = defineStore("menu", () => {
    */
   const isCollapse = ref(false);
 
+  // 1. 用一个 ref 充当“版本号 / 触发器”
+  const menuVersion = ref(0);
+
   /**
    * 切换 是否展开
    * @param val 切换值 boolean
@@ -19,5 +22,5 @@ export const useMenuStore = defineStore("menu", () => {
     }
   }
 
-  return { isCollapse, toggle };
+  return { isCollapse, toggle,menuVersion };
 });

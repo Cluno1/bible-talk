@@ -1,13 +1,14 @@
 <template>
-  <div class="w-full flex justify-center items-center" :style="{ 'color': configStore.textColor }">
+  <div class="w-full flex flex-col justify-center items-center" :style="{ 'color': configStore.textColor }">
+    <h1 class="mb-5 text-4xl">传福音的恩赐 </h1>
+    <h1 class="mb-10 text-2xl"></h1>
     <el-collapse v-model="activeName" accordion expand-icon-position="left" class="lg:w-9/12 w-full">
-      <el-collapse-item  :icon="Opportunity" name="1">
+      <el-collapse-item :icon="Opportunity" name="1">
         <template #title>
           <span class="lg:text-2xl">
             What Is Gospel
           </span>
           什么是福音
-
         </template>
         <nav>
           <router-link to="/bibleTalk/gospel">
@@ -45,7 +46,7 @@
 
         </template>
         <nav>
-          <router-link to="/bibleTalk/preach-gospel">
+          <router-link to="/bibleTalk/preachgospel">
             <p class="mb-1">1. 不要传错福音</p>
             <p class="mb-1">2. 彼此相爱</p>
             <p class="mb-1">3. 依靠神</p>

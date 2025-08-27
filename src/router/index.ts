@@ -26,14 +26,14 @@ const routes: RouteRecordRaw[] = [
     meta: { title: "Bible", icon: "Reading", rank: 2, hidden: true }, // 不显示
   },
   {
-    path: "/bibleTalk",
-    name: "bibleTalk",
+    path: "/bibletalk",
+    name: "bibletalk",
     // component: BibleTalk,//一定要
     meta: { title: "Bible Talk", rank: 3, icon: "ChatDotSquare" },
     children: [
       {
-        path: "index",
-        name: "index",
+        path: "overview",
+        name: "overview",
         component: BibleTalk,
         meta: { title: "Overview", rank: 10 },
       },
@@ -50,8 +50,8 @@ const routes: RouteRecordRaw[] = [
         meta: { title: "Evangelization", rank: 30 },
       },
       {
-        path: "preach-gospel",
-        name: "preachGospel",
+        path: "preachgospel",
+        name: "preachgospel",
         component: PreachGospel,
         meta: { title: "Preach Gospel", rank: 40 },
       },
