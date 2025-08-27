@@ -7,7 +7,7 @@ export const btDataDemo: BibleTalkDataType = {
   titleLeftColor: "#00BFFF",
   titleColor: "#FFFFFF",
   name: "ai-overview",
-  englishName: "AI Overview",
+  englishName: "al-overview",
   children: [
     {
       id: "cs-ai-ml",
@@ -16,7 +16,7 @@ export const btDataDemo: BibleTalkDataType = {
       titleLeftColor: "#32CD32",
       titleColor: "#FFFFFF",
       name: "ml-basics",
-      englishName: "ML Basics",
+      englishName: "ml-asics",
       children: [
         {
           id: "cs-ai-ml-dl",
@@ -24,8 +24,8 @@ export const btDataDemo: BibleTalkDataType = {
           subTitle: "Deep Learning",
           titleLeftColor: "#FF6347",
           titleColor: "#FFFFFF",
-          name: "deep-learning",
-          englishName: "Deep Learning",
+          name: "deep learning",
+          englishName: "deep-learning",
           content: [
             {
               paragraphs:

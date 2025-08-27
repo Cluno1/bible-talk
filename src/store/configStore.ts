@@ -72,60 +72,68 @@ export const useConfigStore = defineStore("config", () => {
     if (router.hasRoute(name)) {
       router.removeRoute(name);
     }
-    console.log(name, "name");
+    console.log(name, "make sure this name not in route before");
     return true;
   }
 
   /**
    * 嵌套添加路由 , 目前最多只添加2层, 如 /computer/cpu
+   * 一开始不要赋值baseName  baseName确保是英文小写 没有空格 和路径一样名称
+   *
+   * 子路由 名称name 是 父name+'-'+子name
    * @param data
    * @param baseRouter
    * @param baseName
    */
   function addBibleTalkRouters(data: BibleTalkDataType, baseName?: string) {
-    const routeName = data.name;
-
-    if (!removeRoute(routeName)) {
-      return;
-    }
-
     //子路由
-    if (baseName && baseName !== "/") {
+    if (baseName) {
+      const routeName = baseName + "-" + data.englishName; //目前该路由名称
+
+      if (!removeRoute(routeName)) {
+        return;
+      }
+
       router.addRoute(baseName, {
-        path: data.name.toLowerCase(), // 如:cpu
-        name: data.name,
+        path: routeName, // 如:cpu
+        name: routeName,
         component: () => import("@/view/play/index.vue"),
         meta: { title: data.name, rank: data.rank || 100 }, //没有rank,固定都是100
       });
-      return;
+      return; //两层
     } else {
       //顶格父路由
-      const fullPath = ("/" + data.name.toLowerCase()).replace(/\/+/g, "/");
+      const routeName = data.englishName;
+      const fullPath = "/" + routeName;
+      if (!removeRoute(routeName)) {
+        return;
+      }
 
       //父路由有孩子节点
       if (data.children && data.children.length > 0) {
         //先添加空的 父节点
         router.addRoute({
           path: fullPath, // 如:/computer
-          name: data.name,
+          name: routeName,
           component: () => import("@/view/play/PlaceHold.vue"),
           meta: { title: data.name, rank: data.rank || 100 }, //没有rank,固定都是100
         });
+
         //添加总览页面
-        removeRoute("overview");
-        router.addRoute(data.name, {
-          path: "overview",
-          name: "overview",
+        removeRoute(routeName + "-" + "overview");
+        router.addRoute(routeName, {
+          path: routeName + "-" + "overview",
+          name: routeName + "-" + "overview",
           component: () => import("@/view/play/index.vue"),
           meta: { title: "overview", rank: 0 }, //overview 固定都是0
         });
 
-        data.children.forEach((_i) => addBibleTalkRouters(_i, data.name));
+        data.children.forEach((_i) => addBibleTalkRouters(_i, routeName));
       } else {
         //父路由无孩子节点,仅仅添加父路由
         router.addRoute({
           path: fullPath,
-          name: data.name,
+          name: routeName,
           component: () => import("@/view/play/index.vue"),
           meta: { title: data.name, rank: data.rank || 100 }, //没有rank,固定都是100
         });

@@ -19,8 +19,8 @@ export interface BibleTalkDataType {
   subTitle?: string | null; //副标题
   titleLeftColor?: string | null; //颜色
   titleColor?: string | null; //颜色
-  name: string; //路由名称    ---推荐bible talk      注意 name 不能是 home 或 bible,否则会删除掉基础的页面!
-  englishName: string; //路由名称  ---推荐bible talk
+  name: string; //路由名称    ---推荐bible talk      注意 name 不能是 home 或 bible,否则会删除掉基础的页面!  显示的名称,可以是中文或英文
+  englishName: string; //路由名称  ---推荐bibletalk  必须英文小写 没有空格  //用他做路由总依据
   children?: BibleTalkDataType[]; //下一级
   content?: Section[]; //
   reference?: Reference[] | null; //引用文献
