@@ -1,4 +1,4 @@
-import type { MusicType } from "@/store/audioStore";
+import type { MusicType } from "@/type/music";
 
 export const audioDemo: MusicType = {
   id: 1,

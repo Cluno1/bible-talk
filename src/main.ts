@@ -14,10 +14,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* 一次性引入整包图标（方便，但体积大） */
 import { fas } from '@fortawesome/free-solid-svg-icons'
-import { far } from '@fortawesome/free-regular-svg-icons'
-import { fab } from '@fortawesome/free-brands-svg-icons'
+// import { far } from '@fortawesome/free-regular-svg-icons'
+// import { fab } from '@fortawesome/free-brands-svg-icons'
 
-library.add(fas, far, fab)      // 把图标加入库
+library.add(fas)      // 把图标加入库
 
 
 

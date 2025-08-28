@@ -12,18 +12,28 @@
                     <font-awesome-icon icon="spinner" spin /> 加载中...
                 </div>
             </div>
-
             <!-- 2. 歌曲信息 -->
             <div class="song-info">
+                <!-- 主标题：优先中文 → 英文 → 未知 -->
+                <div class="song-title" :style="{ color: config.textColor }">
+                    {{ audioConfig.currentAudio?.songTitle
+                        || audioConfig.currentAudio?.songEnglishTitle
+                        || '未知歌曲名' }}
+                </div>
 
-                <div class="song-title" :style="{ 'color': config.textColor }">{{ audioConfig.currentAudio?.songTitle ||
-                    audioConfig.currentAudio?.songEnglishTitle || '未知歌曲名' }}</div>
-                <div class="song-title2" v-show="audioConfig.currentAudio?.songEnglishTitle"
-                    :style="{ 'color': config.textColor }">{{
-                        audioConfig.currentAudio?.songEnglishTitle || '' }}</div>
-                <div class="artist-name">{{ audioConfig.currentAudio?.pic || '演奏者' }}</div>
+                <!-- 副标题：仅当英文存在且与中文不同时展示 -->
+                <div v-if="
+                    audioConfig.currentAudio?.songEnglishTitle
+                    && audioConfig.currentAudio?.songTitle   // 有中文
+                    && audioConfig.currentAudio.songEnglishTitle !== audioConfig.currentAudio.songTitle
+                " class="song-title2" :style="{ color: config.textColor }">
+                    {{ audioConfig.currentAudio.songEnglishTitle }}
+                </div>
+
+                <div class="artist-name">
+                    {{ audioConfig.currentAudio?.artistName || '演奏者' }}
+                </div>
             </div>
-
             <!-- 3. 进度条 -->
             <div class="progress-container">
                 <div class="progress-bar"
@@ -82,12 +92,13 @@
 </template>
 
 <script setup lang="ts">
-import { useAudioConfigStore, type MusicType } from '@/store/audioStore'
+import { useAudioConfigStore } from '@/store/audioStore'
 import { useConfigStore } from '@/store/configStore'
 import { getDarkerActiveColor } from '@/utils/getAutoColor'
 import { ElMessage } from 'element-plus'
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
+import type { MusicType } from '@/type/music'
 const config = useConfigStore()
 const audioConfig = useAudioConfigStore()
 
@@ -195,8 +206,7 @@ function prevTrack() {
 const togglePlay = (force?: boolean) => {
     if (!audioConfig.currentAudio) {
         if (audioConfig.list.length > 0) {
-
-            return loadTrack(audioConfig.list[0])
+            return loadTrack(audioConfig.list[0], true)
         } else {
             ElMessage('播放列表为空')
             return
@@ -259,6 +269,10 @@ onMounted(() => {
     if (!audioConfig.currentAudio && audioConfig.list.length > 0) {
 
         audioConfig.setCurrentAudio(audioConfig.list[0])
+    }
+
+    if (audioConfig.currentAudio) {
+        loadTrack(audioConfig.currentAudio, false)
     }
 
     initPicTimer()

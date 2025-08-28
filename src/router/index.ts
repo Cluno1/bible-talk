@@ -5,7 +5,8 @@ import {
 } from "vue-router";
 import Home from "@/view/Home.vue";
 import Bible from "@/view/Bible.vue";
-import FontTest from "@/view/test/FontTest.vue";
+import MusicAlbum from "@/view/music/MusicAlbum.vue";
+import Audio from "@/view/music/index.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -16,10 +17,21 @@ const routes: RouteRecordRaw[] = [
     meta: { title: "Home", icon: "House", rank: 1 },
   },
   {
-    path: "/test",
-    name: "test",
-    component: FontTest,
-    meta: { title: "Test Font", icon: "Reading", rank: 2 },
+    path: "/music-album",
+    name: "music-album",
+    component: MusicAlbum,
+    meta: {
+      title: "Music Album",
+      icon: "Notification",
+      rank: 20,
+      hidden: true,
+    },
+  },
+  {
+    path: "/audio-play",
+    name: "audio-play",
+    component: Audio,
+    meta: { title: "Audio Play", icon: "Headset", rank: 3, hidden: true },
   },
   {
     path: "/bible",

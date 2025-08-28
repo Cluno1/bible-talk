@@ -15,7 +15,7 @@ import {
 } from "../utils/getAutoColor";
 import { useDark, useToggle } from "@vueuse/core";
 import type { BibleTalkDataType } from "./bibleTalkStore";
-import { useRouter } from "vue-router";
+import { useRouter, type RouteRecordRaw } from "vue-router";
 import { useMenuStore } from "./menuStore";
 
 /**
@@ -176,6 +176,35 @@ export const useConfigStore = defineStore("config", () => {
     return menuStore.menuVersion++;
   }
 
+  /**
+   *  兼顾判断和让 audio播放页面显示在menu上
+   */
+  function showAudioRouter() {
+    console.log("after 1:", router.getRoutes());
+
+    const ob: RouteRecordRaw = {
+      path: "/audio-play",
+      name: "audio-play",
+      component: () => import("@/view/music/index.vue"),
+      meta: { title: "Audio Play", icon: "Headset", rank: 3, hidden: false }, //不隐藏
+    };
+
+    const _arr = router.getRoutes().filter((_i) => _i.name === ob.name);
+    if (_arr.length > 0) {
+      console.log("after 2:", router.getRoutes());
+      if (typeof _arr[0].meta?.hidden == "boolean" && _arr[0].meta?.hidden) {
+        console.log("add audio router");
+        removeRoute(String(ob.name));
+        router.addRoute(ob);
+        console.log("after 3:", router.getRoutes());
+        menuStore.menuVersion++;
+      }
+    } else {
+      router.addRoute(ob);
+      menuStore.menuVersion++;
+    }
+  }
+
   watch(modeDark, validMode);
   validMode();
 
@@ -190,5 +219,6 @@ export const useConfigStore = defineStore("config", () => {
     audioPlayTextColor,
     addBibleTalkRouters,
     removeRoute,
+    showAudioRouter,
   };
 });
