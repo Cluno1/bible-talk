@@ -16,6 +16,8 @@ import {
 import { useDark, useToggle } from "@vueuse/core";
 import type { BibleTalkDataType } from "./bibleTalkStore";
 import { useRouter } from "vue-router";
+import { useMenuStore } from "./menuStore";
+
 /**
  * 组件配置
  */
@@ -23,6 +25,7 @@ export const useConfigStore = defineStore("config", () => {
   const isDark = useDark();
   const toggleDark = useToggle(isDark);
   const router = useRouter();
+  const menuStore = useMenuStore();
 
   /**
    * 当前  组件 统一风格的颜色  激活组件颜色
@@ -101,20 +104,26 @@ export const useConfigStore = defineStore("config", () => {
    */
   function addBibleTalkRouters(data: BibleTalkDataType, baseName?: string) {
     //子路由
-    if (baseName) {
-      const routeName = baseName + "-" + data.englishName; //目前该路由名称
-
+    if (baseName || !data.hasOverview) {
+      const routeName = (baseName ? baseName + "-" : "/") + data.englishName; //目前该路由名称
       if (!removeRoute(routeName)) {
         return;
       }
       console.log("添加一个子路由,path和name", routeName);
-      router.addRoute(baseName, {
-        path: routeName, // 如:cpu
-        name: routeName,
-        component: () => import("@/view/play/index.vue"),
-        meta: { title: data.name, rank: data.rank || 100, icon: data.icon }, //没有rank,固定都是100
-      });
-      return; //两层
+      if (baseName)
+        router.addRoute(baseName, {
+          path: routeName, // 如:cpu
+          name: routeName,
+          component: () => import("@/view/play/index.vue"),
+          meta: { title: data.name, rank: data.rank || 100, icon: data.icon }, //没有rank,固定都是100
+        });
+      else
+        router.addRoute({
+          path: routeName, // 如:cpu
+          name: routeName,
+          component: () => import("@/view/play/index.vue"),
+          meta: { title: data.name, rank: data.rank || 100, icon: data.icon }, //没有rank,固定都是100
+        });
     } else {
       //顶格父路由
       const routeName = data.englishName;
@@ -164,6 +173,7 @@ export const useConfigStore = defineStore("config", () => {
         });
       }
     }
+    return menuStore.menuVersion++;
   }
 
   watch(modeDark, validMode);

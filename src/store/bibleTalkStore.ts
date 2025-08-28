@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { useConfigStore } from "./configStore";
-import { useMenuStore } from "./menuStore";
 import { btDataDemo2 } from "@/test/bt.text";
 
 export type Reference = {
@@ -31,8 +30,6 @@ export interface BibleTalkDataType {
 }
 
 export const useBibleTalkStore = defineStore("bibleTalk", () => {
-  const menuStore = useMenuStore();
-
   const datastorage = new Map<string, BibleTalkDataType>();
 
   const config = useConfigStore();
@@ -41,7 +38,7 @@ export const useBibleTalkStore = defineStore("bibleTalk", () => {
       const data = btDataDemo2;
       datastorage.set(data.englishName, data); 
       config.addBibleTalkRouters(data); //添加路由
-      menuStore.menuVersion++;
+      
     }
   }
 
