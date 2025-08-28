@@ -14,6 +14,17 @@
     'linear-gradient(  #ffffff)',//plain
 ]
 
+
+export const audioPlayGradient=[
+  'linear-gradient(145deg, #2c2c2c, #1a1a1a)',//黑暗模式下
+  'linear-gradient(135deg, #0b4590 0%,  #15afba 100%)'//白天模式下
+]
+
+export const audioPlayTextColorArray=[
+  '#cab9b9',//黑暗模式下适应的 组件,小字颜色
+  '#dce4f1'//白天模式下适应的 组件,小字颜色
+]
+
 /**
  * 颜色库
  */

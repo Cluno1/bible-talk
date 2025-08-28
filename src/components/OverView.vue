@@ -11,8 +11,8 @@
                     </span>
                     {{ childen.subTitle }}
                 </template>
-                <nav v-if="Array.isArray(childen.children) && childen.children?.length>0" >
-                    <router-link :to="`/${data.name}/${childen.name}`">
+                <nav v-if="Array.isArray(childen.children) && childen.children?.length > 0">
+                    <router-link :to="`/${data.englishName}/${data.englishName + '-' + childen.englishName}`">
                         <p class="mb-1" v-for="(cchilden, cindex) in childen.children" :key="index + '-' + cindex">{{
                             cchilden.title }}</p>
                     </router-link>

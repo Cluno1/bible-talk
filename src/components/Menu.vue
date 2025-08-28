@@ -1,11 +1,11 @@
 <!-- src/layout/components/SideMenu.vue -->
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useRouter, type RouteRecordNormalized } from 'vue-router'
+
 import { useMenuStore } from '@/store/menuStore'
 import { useConfigStore } from '@/store/configStore'
 import MenuItem from './MenuItem.vue'
-const router = useRouter()
+import { ref } from 'vue'
+
 const menuStore = useMenuStore()
 const configStore = useConfigStore()
 const isActive = ref(false)
@@ -15,39 +15,7 @@ function setOpacityLight() {
   }, 3000);
 }
 
-// 过滤掉 hidden 的顶层路由
-const menuRoutes = computed(() => {
-  console.log('menu version:', menuStore.menuVersion)//订阅某个值使其更新
-  const _a = router.getRoutes().filter(
-    (r) => {
-      if (r.path) {
-        const a = r.path.split('/')
-        if (a.length > 2) {
-          return false
-        } else {
-          if (!a[1]) {
-            return false
-          }
-        }
-      }
-      return !r.meta?.hidden
-    }
-  )
 
-  function sortRank(_routerArray: RouteRecordNormalized[]) {
-
-    _routerArray.forEach((_r) => {
-      if (_r.children && _r.children.length > 1) {
-        sortRank(_r.children as RouteRecordNormalized[])
-      }
-    })
-    return _routerArray.sort((a, b) => Number(a.meta?.rank || 0) - Number(b.meta?.rank || 0))
-  }
-
-  console.log(_a, 'menu routes')
-  return sortRank(_a)
-}
-)
 
 </script>
 
@@ -61,7 +29,7 @@ const menuRoutes = computed(() => {
     <!-- 移动端：横向菜单 -->
     <div class="lg:hidden">
       <el-menu router mode="horizontal" :default-active="$route.path">
-        <MenuItem v-for="r in menuRoutes" :key="String(r.name || '') + String(r.path)" :route="r" :base-path="''" />
+        <MenuItem v-for="r in menuStore.menuRouters" :key="String(r.name || '') + String(r.path)" :route="r" :base-path="''" />
       </el-menu>
     </div>
 
@@ -72,7 +40,7 @@ const menuRoutes = computed(() => {
         @change="isActive = true; setOpacityLight()" />
 
       <el-menu router :collapse="!menuStore.isCollapse" :default-active="$route.path">
-        <MenuItem v-for="r in menuRoutes" :key="String(r.name || '') + String(r.path)" :route="r" :base-path="''" />
+        <MenuItem v-for="r in menuStore.menuRouters" :key="String(r.name || '') + String(r.path)" :route="r" :base-path="''" />
       </el-menu>
     </div>
   </div>

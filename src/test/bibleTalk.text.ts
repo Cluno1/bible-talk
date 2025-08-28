@@ -2,6 +2,7 @@ import type { BibleTalkDataType } from "@/store/bibleTalkStore";
 
 export const btDataDemo: BibleTalkDataType = {
   id: "cs-ai",
+  hasOverview:true,
   title: "人工智能",
   subTitle: "Artificial Intelligence",
   titleLeftColor: "#00BFFF",
@@ -100,3 +101,7 @@ export const btDataDemo: BibleTalkDataType = {
     }
   ]
 };
+
+
+
+

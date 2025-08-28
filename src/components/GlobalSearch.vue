@@ -1,10 +1,11 @@
 <template>
-
     <div class="lg:hidden">
         <el-autocomplete v-model="searchInput" size='large' :fetch-suggestions="querySearch" clearable class="w-50"
             placeholder="search" @select="handleSelect">
             <template #append>
-                <el-button :icon="Search" />
+                <font-awesome-icon icon="fa-solid fa-paper-plane" style="color: gray;" v-show="!loading"
+                    @click="handleSelect" />
+                <font-awesome-icon icon="spinner" spin style="color: gray;" v-show="loading" @click="handleSelect" />
             </template>
         </el-autocomplete>
     </div>
@@ -13,9 +14,13 @@
         <el-autocomplete v-model="searchInput" :fetch-suggestions="querySearch" clearable class="w-50"
             placeholder="search" @select="handleSelect">
             <template #append>
-                <el-button :icon="Search" />
+                <font-awesome-icon icon="fa-solid fa-paper-plane" style="color: gray;" v-show="!loading"
+                    @click="handleSelect" />
+                <font-awesome-icon icon="spinner" spin style="color: gray;" v-show="loading" @click="handleSelect" />
             </template>
         </el-autocomplete>
+
+
     </div>
 
 
@@ -23,13 +28,32 @@
 
 
 <script setup lang="ts">
-
-import { Search } from '@element-plus/icons-vue';
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useBibleTalkStore } from '@/store/bibleTalkStore';
+import { useMenuStore } from '@/store/menuStore';
+
+const props = defineProps<{
+    type: 'music' | undefined | 'page' //默认是搜索全部
+}>()
+
+/**               类型定义       */
+export type GlobalSearchCallBackType = {
+    value: string | number,
+    router?: string,//页面路由
+    //other ...
+}
+
+const loading = ref(false)
+const bibleTalkStore = useBibleTalkStore()
+const menuStore = useMenuStore()
 const router = useRouter()
 const pageString = '   ->'
-const allCanRouter = computed(() => router.getRoutes().filter((_i) => _i.components !== undefined && _i.meta?.hidden !== true && _i.path !== '/'))
+const allCanRouter = computed(() => {
+    console.log(menuStore.menuVersion, 'new version')
+    return router.getRoutes().filter((_i) => _i.components !== undefined && _i.meta?.hidden !== true && _i.path !== '/')
+
+})
 
 const searchInput = ref('')
 watch(searchInput, () => {
@@ -39,7 +63,8 @@ watch(searchInput, () => {
     }
 })
 
-const data = computed(() => {
+
+const routerData = computed(() => {
     return allCanRouter.value.map((_i) => {
         return {
             value: (_i.meta?.title || _i.name) + pageString,
@@ -47,25 +72,42 @@ const data = computed(() => {
         }
     })
 })
-
-export type GlobalSearchCallBackType = {
-    value: string | number,
-    router?: string,
-    //other ...
+//页面的数据 搜索页面
+function getPage(queryString: string): GlobalSearchCallBackType[] {
+    return routerData.value.filter((_i) => typeof _i.value === 'string' && _i.value.includes(queryString))
 }
 
 
+
+//用户搜索一些东西后,可供用户选择的值... 函数
 const querySearch = (queryString: string, cb: any) => {
-    const results = data.value.filter((_i) => typeof _i.value === 'string' && _i.value.includes(queryString))
+
+    const results: GlobalSearchCallBackType[] = []
+    if (!props.type || props.type == 'page') {
+        results.push(...getPage(queryString))
+    }
+
     // call callback function to return suggestions
     cb(results)
 }
 
 function handleSelect(item: GlobalSearchCallBackType) {
-    console.log(item, 'item')
-
-    if (item.router)
+    if (loading.value) {
+        return;
+    }
+    loading.value = true;
+    if (item.router) {
+        searchInput.value = ''
         router.push(item.router)
+    } else {
+
+        bibleTalkStore.getData(searchInput.value)
+    }
+
+    setTimeout(() => {
+        loading.value = false
+    }, 2000);
+
 }
 
 </script>

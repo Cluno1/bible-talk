@@ -1,13 +1,21 @@
 <!-- src/layout/components/MenuItem.vue -->
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { RouteRecordRaw } from 'vue-router'
+import { computed, type PropType } from 'vue'
 import { getIcon } from '@/utils/icon'
+import type { MenuItemRouteType } from '@/type/menu';
 
-const props = defineProps<{
-    route: RouteRecordRaw
-    basePath: String
-}>()
+
+
+const props = defineProps({
+    route: {
+        type: Object as PropType<MenuItemRouteType>,
+        required: true
+    },
+    basePath: {
+        type: String,
+        required: true
+    }
+})
 
 const fullPath = computed(() => {
     if (props.route.path.includes('/')) {
@@ -25,7 +33,7 @@ const hasChildren = computed(//是否有子路由
 
 <template>
     <!-- 叶子节点 -->
-    <el-menu-item v-if="!hasChildren" :index="fullPath">
+    <el-menu-item v-if="!hasChildren" :index="route.path">
         <el-icon v-if="route.meta?.icon">
             <component :is="getIcon(route.meta.icon as string)" />
         </el-icon>
@@ -33,7 +41,7 @@ const hasChildren = computed(//是否有子路由
     </el-menu-item>
 
     <!-- 子菜单 -->
-    <el-sub-menu v-else :index="fullPath">
+    <el-sub-menu v-else :index="route.path">
         <template #title>
             <el-icon v-if="route.meta?.icon">
                 <component :is="getIcon(route.meta.icon as string)" />

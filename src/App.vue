@@ -23,7 +23,7 @@ const configStore = useConfigStore()
         </el-aside>
         <!-- main -->
         <el-main>
-          <div :style="{ 'width': '100%', 'height': '90vh', 'overflow': 'auto' }">
+          <div class="main w-full overflow-auto pb-3 mb-3" :style="{ 'max-height': '97vh' }">
             <router-view />
           </div>
 
@@ -42,7 +42,7 @@ const configStore = useConfigStore()
       </el-header>
       <!-- main -->
       <el-main>
-        <div :style="{ 'width': '100%', 'maxHeight': '78vh', 'overflow': 'auto' }">
+        <div class="main w-full" :style="{ 'height': '90vh', 'overflow': 'auto' }">
           <router-view />
         </div>
 
@@ -55,4 +55,19 @@ const configStore = useConfigStore()
 
 </template>
 
-<style scoped></style>
+<style scoped>
+
+.main::-webkit-scrollbar {
+    width: 5px;
+}
+
+.main::-webkit-scrollbar-track {
+    background: transparent;
+}
+/* rgba(116, 108, 108, 0.808) */
+.main::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 5px;
+}
+
+</style>
