@@ -3,8 +3,11 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import Fuse from "fuse.js";
 import { ihopeAlbum } from "@/test/musicAlbum.test";
+import { localMusicsDemo } from "@/test/audio.text";
+import { useAudioConfigStore } from "./audioStore";
 
 export const useAlbumConfigStore = defineStore("albumConfig", () => {
+  const audioConfig = useAudioConfigStore();
   /* ===================== 状态 ===================== */
   // 专辑映射  id -> MusicAlbum
   const albumsVersion = ref(0);
@@ -35,14 +38,11 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
   });
 
   /* ===================== 专辑相关 ===================== */
+
   /** 新增/覆盖整张专辑（包含其歌曲列表） */
   function addAlbum(album: MusicAlbum) {
-    function musicAdd(music: MusicType) {
-      musics.set(music.id, music);
-    }
     albums.set(album.id, album);
-    album.musics?.forEach(musicAdd); // 把专辑里的所有单曲也存进 musics 表 方便搜索
-    musicsVersion.value++;
+    addMusic(album.musics); // 把专辑里的所有单曲也存进 musics 表 方便搜索
     albumsVersion.value++;
   }
 
@@ -58,7 +58,7 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
     albums.delete(id);
   }
 
-  /**  严格查询 联网查询 根据 id 查找专辑，不存在返回 undefined */
+  /** 相册 严格查询 联网查询 根据 id 查找专辑，不存在返回 undefined */
   function searchAlbumByClound(id: string | number): MusicAlbum | undefined {
     const _a = albums.get(id);
     if (_a) {
@@ -75,7 +75,7 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
     return undefined;
   }
 
-  /** 模糊查询 根据 id 查找专辑，不存在返回 空[] */
+  /** 相册 模糊查询 根据 id 查找专辑，不存在返回 空[] */
   function searchAlbum(id: string | number): MusicAlbum[] {
     const re: MusicAlbum[] = [];
     albums.forEach((_val, _key) => {
@@ -110,7 +110,7 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
     musics.delete(id);
   }
 
-  /** 根据 id 查找单曲，不存在返回 undefined */
+  /** 根据 id 查找 已经缓存在本地的 单曲，不存在返回 undefined */
   function searchMusic(id: string | number): MusicType | undefined {
     return musics.get(id);
   }
@@ -121,14 +121,7 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
    */
   function searchMusicByVal(val: string | number): MusicType[] {
     if (val !== 0 && !val) {
-      console.log(val, "val null ??");
-      let dd: MusicAlbum | undefined;
-      albums.forEach((_val, _key) => {
-        dd = _val;
-      });
-      if (dd) {
-        return searchMusicByVal(dd.id);
-      }
+      return Array.from(musics.values());
     }
     const re = [];
     const _a = searchMusic(val);
@@ -151,12 +144,22 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
    * @param id
    */
   function searchMusicById(id: string | number): MusicType | undefined {
-    const a = musics.get(id);
+    const a = searchMusic(id);
     if (a) {
       //添加到 播放列表
+      audioConfig.addAudioList(a);
       return a;
     } else {
       //联网查询  todo ...
+
+      //现在本地查询:
+
+      const _a = localMusicsDemo.find((_i) => _i.id === id);
+      if (_a) {
+        addMusic(_a);
+        audioConfig.addAudioList(_a);
+        return _a;
+      }
 
       return undefined;
     }

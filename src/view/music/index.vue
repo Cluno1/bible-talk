@@ -1,8 +1,8 @@
 <template>
-    <div class="body flex justify-center items-center lg:justify-start lg:items-start ">
+    <div class="body gap-9 flex justify-center items-center lg:justify-start lg:items-start  ">
         <div class="hidden lg:block lg:w-1/3">
-            <!-- 播放列表表格 -->
-            <el-table :data="audioConfig.list" stripe style="width: 100%" max-height="400" empty-text="No music yet">
+            <!-- 播放列表表格 pc -->
+            <el-table :data="audioConfig.list" stripe style="width: 100%" max-height="500" empty-text="No music yet">
                 <!-- 歌名 + 歌手 -->
                 <el-table-column label="Title / Artist">
                     <template #default="{ row }">
@@ -31,7 +31,7 @@
             </el-table>
         </div>
 
-        <div :class="['player-container', 'w-fit', config.modeDark ? '' : 'shadow-light']"
+        <div :class="['player-container', 'w-[80%]', 'lg:w-fit', config.modeDark ? '' : 'shadow-light']"
             :style="{ 'background': config.audioPlayBgColor, 'color': config.audioPlayTextColor }">
             <!-- 1. 封面 -->
             <div :class="['album-cover']" :style="{ 'backgroundColor': config.lightMainColor }">
@@ -107,15 +107,30 @@
                     :style="{ 'accent-color': config.mainColor }" />
             </div>
 
-            <!-- 6. 歌词 -->
-            <div class="lyrics lg:hidden ">
-                <!-- <p>In the silence of the night</p>
-                <p class="current">Fade away before the dawn</p>
-                <p>Let the night take me away</p>
-                <p>Through the shadows we belong</p>
-                <p>In this moment, time stands still</p> -->
+            <!-- 6. 歌词  手机端-->
+            <div class=" lg:hidden h-32  overflow-y-auto text-center">
+                <div ref="lyricRef" class="space-y-2">
+                    <p v-for="(l, i) in audioConfig.currentLyrics" :key="i" class="transition-all duration-300" :class="i === activeLine
+                        ? 'text-blue-500'
+                        : 'text-gray-400'">
+                        {{ l.text }}
+                    </p>
+                </div>
             </div>
         </div>
+        <!-- 歌词  pc端 -->
+        <div class="hidden lg:block lg:w-1/3">
+            <div class="lyrics  overflow-y-auto h-[80%] text-center">
+                <div ref="lyricRef" class="space-y-2">
+                    <p v-for="(l, i) in audioConfig.currentLyrics" :key="i" class="transition-all duration-300" :class="i === activeLine
+                        ? 'current'
+                        : ''">
+                        {{ l.text }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <el-dialog v-model="musicListShow" draggable center title="Music List" width="350">
             <!-- 搜索组件保持不变 -->
             <GlobalSearch type="music" />
@@ -157,12 +172,11 @@ import { useAudioConfigStore } from '@/store/audioStore'
 import { useConfigStore } from '@/store/configStore'
 import { getDarkerActiveColor } from '@/utils/getAutoColor'
 import { ElMessage } from 'element-plus'
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import type { MusicType } from '@/type/music'
 const config = useConfigStore()
 const audioConfig = useAudioConfigStore()
-
 
 /* ---------- 音频实例 ---------- */
 const audio = new Audio(audioConfig.getInitAudio().link)
@@ -213,6 +227,37 @@ function clearPicTimer() {
     }
 
 }
+
+// 歌词相关
+
+
+/* 计算当前高亮行索引 */
+const activeLine = computed(() => {
+    const list = audioConfig.currentLyrics
+    let idx = -1
+    for (let i = 0; i < list.length; i++) {
+        if (currentTime.value >= list[i].time) idx = i
+        else break
+    }
+    return idx
+})
+
+/* 让当前行始终保持在可视区 */
+const lyricRef = ref<HTMLDivElement>()
+watch(activeLine, () => {
+    nextTick(() => {
+        if (lyricRef.value) {
+            const target = lyricRef.value.children[activeLine.value] as HTMLElement
+
+            console.log(target, 'target ')
+            target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+        }
+    })
+
+})
+
+
 
 /* ---------- 播放控制 ---------- */
 // 加载并播放一条音轨
@@ -355,9 +400,8 @@ onUnmounted(() => {
 }
 
 .body {
-
-    gap: 3rem;
-    height: 90vh;
+    border-radius: 15px;
+    max-height: 90vh;
     overflow: auto;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
 }
@@ -377,6 +421,7 @@ onUnmounted(() => {
 }
 
 .player-container {
+
     border-radius: 20px;
     padding: 25px;
     transition: transform 0.3s ease;

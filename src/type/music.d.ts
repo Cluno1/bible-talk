@@ -6,7 +6,8 @@ export type MusicType = {
   songEnglishTitle?: string;
   artistName?: string;
   lyricsLink?: string;
-  album?: string;
+  album?: string;     //albumTitle  不能传递id,这样人就可以根据id搜索到该歌本了  不可以
+  albumPic?:string[];
   meta?: any; //预留字段
 };
 

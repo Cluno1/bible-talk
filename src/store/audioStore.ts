@@ -1,4 +1,5 @@
 import type { MusicType } from "@/type/music";
+import { getInitLyrics, loadLrc } from "@/utils/lyrics";
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 
@@ -7,7 +8,22 @@ export const useAudioConfigStore = defineStore("audioConfig", () => {
   const list = ref<MusicType[]>([]); //用户播放列表清单
 
   const historyAudio = ref<MusicType[]>([]); // 上一首历史（最多 10 条）
-  const currentAudio = ref<MusicType | null>(null);
+  const currentAudio = ref<MusicType | null>(null); //当前歌曲
+  const currentLyrics = ref<{ time: number; text: string }[]>(getInitLyrics()); //当前歌曲解析出来的歌词
+
+  watch(currentAudio, async (newVal) => {
+    if (newVal?.lyricsLink) {
+      try {
+        currentLyrics.value = await loadLrc(newVal.lyricsLink);
+      } catch (e: any) {
+        currentLyrics.value = getInitLyrics();
+        console.log(e?.message || "error from lyrics load");
+      }
+    } else {
+      currentLyrics.value = getInitLyrics();
+    }
+    console.log(currentLyrics.value, "currentLyrics.value");
+  });
 
   function setCurrentAudio(val: MusicType | MusicType[]) {
     if (Array.isArray(val)) {
@@ -52,5 +68,6 @@ export const useAudioConfigStore = defineStore("audioConfig", () => {
     clearAudioList,
     deleteAudioFromList,
     getInitAudio,
+    currentLyrics,
   };
 });

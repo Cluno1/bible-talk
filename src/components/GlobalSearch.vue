@@ -28,7 +28,7 @@
 
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter, type RouteRecordNormalized } from 'vue-router';
 import { useBibleTalkStore } from '@/store/bibleTalkStore';
 import { useMenuStore } from '@/store/menuStore';
@@ -101,7 +101,7 @@ function formatSearchInput(val: string): {
     // 1. 先检查是否完全匹配完整前缀
     const exactMatch = _fullPrefixes.find(p => val === p);
 
-    console.log(val,exactMatch,'exactMatch')
+    console.log(val, exactMatch, 'exactMatch')
 
     if (exactMatch) {
         return {
@@ -220,6 +220,15 @@ const querySearch = (queryString: string, cb: any) => {
     cb(results)
 }
 
+onMounted(() => {
+    if (albumConfigStore.searchMusicById('方的言')) {
+        loading.value = false
+        config.showAudioRouter()
+        router.push('/audio-play')
+        return ElMessage.success('添加歌曲成功')
+    }
+})
+
 function handleSelect(item: GlobalSearchCallBackType) {
     if (loading.value) {
         return;
@@ -263,9 +272,9 @@ function handleSelect(item: GlobalSearchCallBackType) {
                 return ElMessage.success('添加专辑成功')
             }
             if (albumConfigStore.searchMusicById(searchInput.value)) {
-                // todo  添加到播放列表
                 loading.value = false
                 config.showAudioRouter()
+                router.push('/audio-play')
                 return ElMessage.success('添加歌曲成功')
             }
             loading.value = false
