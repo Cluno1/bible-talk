@@ -26,7 +26,6 @@
     <!-- <div class="w-10/12">
       <el-divider />
     </div> -->
-
   </div>
 </template>
 
@@ -34,7 +33,6 @@
 import { Moon, Sunny } from '@element-plus/icons-vue';
 import { useConfigStore } from '../store/configStore';
 import { blue, pink } from '../utils/color';
-
 import GlobalSearch from './GlobalSearch.vue';
 import FullScreen from './FullScreen.vue';
 const config = useConfigStore();

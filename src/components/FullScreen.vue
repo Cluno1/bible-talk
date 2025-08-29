@@ -19,9 +19,7 @@
 
 </template>
 <script lang="ts" setup>
-
 import { ref } from 'vue';
-
 const isFullscreen = ref(false);
 
 function toggleFullscreen() {

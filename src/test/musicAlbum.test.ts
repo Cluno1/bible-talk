@@ -171,7 +171,7 @@ export const ihopeAlbum: MusicAlbum = {
     },
     {
       id: "ihope-119",
-      link: "https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/music/119我要求告耶和华.mp3",
+      link: "https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/music/119 我要求告耶和华.mp3",
       songTitle: "119-我要求告耶和华",
       songEnglishTitle: "",
       album: "ihope",

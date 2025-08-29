@@ -41,7 +41,7 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
       musics.set(music.id, music);
     }
     albums.set(album.id, album);
-    album.musics?.forEach(musicAdd); // 把专辑里的所有单曲也存进 musics 表
+    album.musics?.forEach(musicAdd); // 把专辑里的所有单曲也存进 musics 表 方便搜索
     musicsVersion.value++;
     albumsVersion.value++;
   }
@@ -93,8 +93,13 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
   /* ===================== 单曲相关 ===================== */
 
   /** 新增/覆盖单曲 开放给其他页面使用  每增加一个就更新版本,推荐添加album时直接自己写 */
-  function addMusic(music: MusicType) {
-    musics.set(music.id, music);
+  function addMusic(music: MusicType | MusicType[]) {
+    if (Array.isArray(music)) {
+      music.forEach((_i) => musics.set(_i.id, _i));
+    } else {
+      musics.set(music.id, music);
+    }
+
     musicsVersion.value++;
   }
 

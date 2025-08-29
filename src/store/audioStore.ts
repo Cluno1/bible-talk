@@ -18,14 +18,14 @@ export const useAudioConfigStore = defineStore("audioConfig", () => {
   }
   function addAudioList(val: MusicType | MusicType[]) {
     if (Array.isArray(val)) {
-      val.forEach((_i) => addAudioList);
+      val.forEach((item) => addAudioList(item));
     } else {
       deleteAudioFromList(val);
       list.value.push(val);
     }
   }
 
-  function getInitAudio():MusicType {
+  function getInitAudio(): MusicType {
     return {
       id: -1,
       link: "",
@@ -51,6 +51,6 @@ export const useAudioConfigStore = defineStore("audioConfig", () => {
     addAudioList,
     clearAudioList,
     deleteAudioFromList,
-    getInitAudio
+    getInitAudio,
   };
 });

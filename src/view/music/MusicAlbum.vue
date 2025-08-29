@@ -1,12 +1,15 @@
 <template>
     <div class="p-4">
+        <el-button @click="handleRoute(songs)">全部播放</el-button>
         <!-- 歌曲网格 -->
-        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            <el-card v-for="song in songs" :key="song.id" shadow="hover" class="cursor-pointer" @click="handleRoute(song)">
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
+            <el-card v-for="song in songs" :key="song.id" shadow="hover" class="cursor-pointer"
+                @click="handleRoute(song)">
                 <!-- 封面 -->
                 <div class="aspect-square">
-                    <el-image :src="(song.pic && song.pic[0]) || albumPic || 'https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/pic/music%20play.png'" fit="cover"
-                        class="w-full h-full rounded" />
+                    <el-image
+                        :src="(song.pic && song.pic[0]) || albumPic || 'https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/pic/music%20play.png'"
+                        fit="cover" class="w-full h-full rounded" />
                 </div>
                 <!-- 标题 -->
                 <div class="mt-2">
@@ -32,12 +35,21 @@ const route = useRoute()
 const store = useAlbumConfigStore()
 const songs = ref<MusicType[]>([])
 const id = route.query.id as string
-const audio= useAudioConfigStore()
-const albumPic=ref('')
-const router=useRouter()
-const handleRoute=(song:MusicType)=>{
-    audio.setCurrentAudio(song)
-    audio.addAudioList(song)
+const audio = useAudioConfigStore()
+const albumPic = ref('')
+const router = useRouter()
+const handleRoute = (song: MusicType | MusicType[]) => {
+
+    if (Array.isArray(song) && song.length > 0) {
+        audio.addAudioList(song)
+        audio.setCurrentAudio(song[0])
+
+    } else {
+
+        audio.setCurrentAudio(song)
+        audio.addAudioList(song)
+    }
+
     router.push('/audio-play')
 }
 
@@ -47,10 +59,10 @@ onMounted(() => {
         let a = store.albums.get(id)
         if (a) {
 
-            if(a.pic&&(a.pic||[]).length>0)
-            albumPic.value=a.pic[0]
+            if (a.pic && (a.pic || []).length > 0)
+                albumPic.value = a.pic[0]
             songs.value = [...a.musics]// 触发加载
-            
+
         }
 
     }

@@ -52,9 +52,9 @@ export type GlobalSearchCallBackType = {
 }
 
 /**   预设的一些搜索快捷值 和 占位值 */
-const pageString = '^page    ' //page 占位值
-const songString = '!song    ' //song 占位值
-const musicAlbumString = '@album    ' //song 占位值
+const pageString = '^page\u00A0\u00A0\u00A0\u00A0' //page 占位值
+const songString = '!song\u00A0\u00A0\u00A0\u00A0' //song 占位值
+const musicAlbumString = '@album\u00A0\u00A0\u00A0\u00A0' //song 占位值
 
 const pagePre = '^' //page 预设
 const songPre = '!' //song 预设
@@ -92,54 +92,58 @@ const albumConfigStore = useAlbumConfigStore()
 const audioStore = useAudioConfigStore()
 
 function formatSearchInput(val: string): {
-  formatVal: string;
-  preString: string | null;
+    formatVal: string;
+    preString: string | null;
 } {
-  const _fullPrefixes = [pageString, songString, musicAlbumString]; // 包含空格的完整前缀
-//   const _shortPrefixes = [pagePre, songPre, musicAlbumPre];        // 单个字符前缀
+    const _fullPrefixes = [pageString, songString, musicAlbumString]; // 包含空格的完整前缀
+    //   const _shortPrefixes = [pagePre, songPre, musicAlbumPre];        // 单个字符前缀
 
-  // 1. 先检查是否完全匹配完整前缀
-  const exactMatch = _fullPrefixes.find(p => val === p);
-  if (exactMatch) {
+    // 1. 先检查是否完全匹配完整前缀
+    const exactMatch = _fullPrefixes.find(p => val === p);
+
+    console.log(val,exactMatch,'exactMatch')
+
+    if (exactMatch) {
+        return {
+            formatVal: val.replace(exactMatch, ''),               // 完全匹配时返回空串
+            preString: exactMatch,
+        };
+    }
+
+    // 2. 检查是否包含完整前缀
+    const containsMatch = _fullPrefixes.map(str => str.trim()).find(p => val.includes(p));
+
+    if (containsMatch) {
+        return {
+            formatVal: val.replace(containsMatch, ''),               // 包含时同样返回空串
+            preString: containsMatch,
+        };
+    }
+
+    // 3. 原来的逻辑：检查单字符前缀
+    switch (val?.charAt(0)) {
+        case pagePre:
+            return {
+                formatVal: val.slice(pagePre.length),
+                preString: pagePre,
+            };
+        case songPre:
+            return {
+                formatVal: val.slice(songPre.length),
+                preString: songPre,
+            };
+        case musicAlbumPre:
+            return {
+                formatVal: val.slice(musicAlbumPre.length),
+                preString: musicAlbumPre,
+            };
+    }
+
+    // 4. 兜底：无匹配
     return {
-      formatVal: '',               // 完全匹配时返回空串
-      preString: exactMatch,
+        formatVal: val,
+        preString: null,
     };
-  }
-
-  // 2. 检查是否包含完整前缀
-  const containsMatch = _fullPrefixes.find(p => val.includes(p));
-  if (containsMatch) {
-    return {
-      formatVal: '',               // 包含时同样返回空串
-      preString: containsMatch,
-    };
-  }
-
-  // 3. 原来的逻辑：检查单字符前缀
-  switch (val?.charAt(0)) {
-    case pagePre:
-      return {
-        formatVal: val.slice(pagePre.length),
-        preString: pagePre,
-      };
-    case songPre:
-      return {
-        formatVal: val.slice(songPre.length),
-        preString: songPre,
-      };
-    case musicAlbumPre:
-      return {
-        formatVal: val.slice(musicAlbumPre.length),
-        preString: musicAlbumPre,
-      };
-  }
-
-  // 4. 兜底：无匹配
-  return {
-    formatVal: val,
-    preString: null,
-  };
 }
 
 
@@ -208,10 +212,7 @@ const querySearch = (queryString: string, cb: any) => {
         }
     } else {
         results.push(...getPage(formatVal))
-
         results.push(...getSong(formatVal))
-
-
         results.push(...getMusicAlbum(formatVal))
     }
 
@@ -228,6 +229,10 @@ function handleSelect(item: GlobalSearchCallBackType) {
         loading.value = false
     }, 10_000);
 
+    const format = formatSearchInput(searchInput.value)
+
+    console.log(searchInput.value, format.preString, format.formatVal, 'format')
+
     if (item.router) {
         searchInput.value = ''
         router.push(item.router)
@@ -237,12 +242,12 @@ function handleSelect(item: GlobalSearchCallBackType) {
         audioStore.addAudioList(item.song)
         ElMessage.success('添加歌曲成功')
     } else if (item.musicAlbum) {
-        //跳转到 专辑页面 ?? todo
+
         searchInput.value = ''
         router.push({
             path: '/music-album',
             query: {
-                id: String(item.value).split(musicAlbumString)[1],
+                id: item.musicAlbum.id,
             }
         })
 
