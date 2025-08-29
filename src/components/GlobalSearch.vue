@@ -28,7 +28,7 @@
 
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter, type RouteRecordNormalized } from 'vue-router';
 import { useBibleTalkStore } from '@/store/bibleTalkStore';
 import { useMenuStore } from '@/store/menuStore';
@@ -220,14 +220,7 @@ const querySearch = (queryString: string, cb: any) => {
     cb(results)
 }
 
-onMounted(() => {
-    if (albumConfigStore.searchMusicById('方的言')) {
-        loading.value = false
-        config.showAudioRouter()
-        router.push('/audio-play')
-        return ElMessage.success('添加歌曲成功')
-    }
-})
+
 
 function handleSelect(item: GlobalSearchCallBackType) {
     if (loading.value) {

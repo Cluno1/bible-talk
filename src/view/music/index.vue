@@ -31,7 +31,7 @@
             </el-table>
         </div>
 
-        <div :class="['player-container', 'w-[80%]', 'lg:w-fit', config.modeDark ? '' : 'shadow-light']"
+        <div :class="['player-container', 'w-[80%]', 'md:w-fit', config.modeDark ? '' : 'shadow-light']"
             :style="{ 'background': config.audioPlayBgColor, 'color': config.audioPlayTextColor }">
             <!-- 1. 封面 -->
             <div :class="['album-cover']" :style="{ 'backgroundColor': config.lightMainColor }">
@@ -108,28 +108,32 @@
             </div>
 
             <!-- 6. 歌词  手机端-->
-            <div class=" lg:hidden h-32  overflow-y-auto text-center">
-                <div ref="lyricRef" class="space-y-2">
-                    <p v-for="(l, i) in audioConfig.currentLyrics" :key="i" class="transition-all duration-300" :class="i === activeLine
-                        ? 'text-blue-500'
-                        : 'text-gray-400'">
+            <div class="lyrics lg:hidden pt-6 h-40 overflow-y-auto text-center relative" ref="lyricsContainer">
+                <div ref="lyricRef" class="space-y-2 py-12">
+                    <p v-for="(l, i) in audioConfig.currentLyrics" :key="i" class="transition-all duration-300 px-4"
+                        :class="i === activeLine ? 'text-white font-medium scale-105' : 'text-gray-400'"
+                        @click="handleChActiveLyr(l)">
                         {{ l.text }}
                     </p>
                 </div>
             </div>
+
         </div>
         <!-- 歌词  pc端 -->
-        <div class="hidden lg:block lg:w-1/3">
-            <div class="lyrics  overflow-y-auto h-[80%] text-center">
-                <div ref="lyricRef" class="space-y-2">
-                    <p v-for="(l, i) in audioConfig.currentLyrics" :key="i" class="transition-all duration-300" :class="i === activeLine
-                        ? 'current'
-                        : ''">
-                        {{ l.text }}
-                    </p>
-                </div>
+
+        <div class="lyrics hidden lg:block lg:w-1/3 pt-6 h-80 overflow-y-auto text-center relative"
+            ref="lyricsContainerPc">
+            <div ref="lyricRefPc" class="space-y-2 py-12">
+                <p v-for="(l, i) in audioConfig.currentLyrics" :key="i" class="transition-all duration-300 px-4"
+                    :class="i === activeLine ? ' font-medium scale-105 ' : ''" @click="handleChActiveLyr(l)"
+                    :style="{ 'color': i === activeLine ? config.textColor : (config.modeDark ? getDarkerActiveColor('#99a1af', 0.2) : '#99a1af') }">
+                    {{ l.text }}
+                </p>
             </div>
+
+
         </div>
+
 
         <el-dialog v-model="musicListShow" draggable center title="Music List" width="350">
             <!-- 搜索组件保持不变 -->
@@ -230,6 +234,16 @@ function clearPicTimer() {
 
 // 歌词相关
 
+function handleChActiveLyr(lyr: { text: string, time: number }) {
+    if (lyr != audioConfig.currentLyrics[activeLine.value]) {
+        const a = audioConfig.currentLyrics.find(_i => _i == lyr)
+        if (a) {
+            audio.currentTime = a.time
+            currentTime.value = a.time
+        }
+    }
+}
+
 
 /* 计算当前高亮行索引 */
 const activeLine = computed(() => {
@@ -244,17 +258,66 @@ const activeLine = computed(() => {
 
 /* 让当前行始终保持在可视区 */
 const lyricRef = ref<HTMLDivElement>()
+const lyricRefPc = ref<HTMLDivElement>()
 watch(activeLine, () => {
     nextTick(() => {
         if (lyricRef.value) {
             const target = lyricRef.value.children[activeLine.value] as HTMLElement
+            target?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
-            console.log(target, 'target ')
-            target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+        if (lyricRefPc.value) {
+            const target = lyricRefPc.value.children[activeLine.value] as HTMLElement
+            target?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
         }
     })
 
+})
+
+
+// 歌词容器和内容引用
+const lyricsContainer = ref<HTMLDivElement>()
+const lyricsContainerPc = ref<HTMLDivElement>()
+
+
+/* 自定义滚动函数 - 让当前行保持在可视区中间 */
+const scrollToActiveLine = () => {
+    if (!lyricsContainer.value || !lyricRef.value || activeLine.value === -1) return
+    if (!lyricsContainerPc.value || !lyricRefPc.value) return
+
+    /**手机*/
+
+    function gun(lyricsContainer: HTMLDivElement, lyricRef: HTMLDivElement) {
+        const container = lyricsContainer
+        const activeElement = lyricRef.children[activeLine.value] as HTMLElement
+        if (!activeElement) return
+
+        // 计算目标滚动位置
+        const containerHeight = container.clientHeight
+        const elementOffset = activeElement.offsetTop
+        const elementHeight = activeElement.offsetHeight
+
+        // 将当前行滚动到容器中间
+        const targetScrollTop = elementOffset - (containerHeight / 2) + (elementHeight / 2)
+
+        // 使用平滑滚动
+        container.scrollTo({
+            top: targetScrollTop,
+            behavior: 'smooth'
+        })
+    }
+
+    gun(lyricsContainer.value, lyricRef.value)
+    gun(lyricsContainerPc.value, lyricRefPc.value)
+
+
+}
+// 监听activeLine变化
+watch(activeLine, () => {
+    nextTick(() => {
+        scrollToActiveLine()
+    })
 })
 
 
@@ -578,6 +641,7 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     margin-top: 15px;
+    margin-bottom: 15px;
     padding: 0 20px;
 }
 
@@ -618,41 +682,16 @@ onUnmounted(() => {
 
 
 
-
-.lyrics {
-    margin-top: 20px;
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    max-height: 12rem;
-    overflow-y: auto;
-}
-
-.lyrics p {
-    text-align: center;
-    margin: 10px 0;
-    font-size: 14px;
-    color: #9e9e9e;
-    transition: all 0.3s ease;
-}
-
-.lyrics .current {
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 500;
-    transform: scale(1.05);
-}
-
 .lyrics::-webkit-scrollbar {
     width: 5px;
 }
 
 .lyrics::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0);
+    background: transparent;
 }
 
 .lyrics::-webkit-scrollbar-thumb {
-    background: rgba(184, 181, 181, 0.906);
+    background: transparent;
     border-radius: 15px;
 }
 
