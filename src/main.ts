@@ -7,7 +7,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { createPinia } from 'pinia'
 import router from './router'
 import 'element-plus/theme-chalk/dark/css-vars.css'
-
+import 'virtual:svg-icons-register'
 /* FontAwesome 核心 */
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'

@@ -10,7 +10,7 @@ export const useMenuStore = defineStore("menu", () => {
   const router = useRouter();
 
   // 1. 用一个 ref 充当“版本号 / 触发器”
-  const menuVersion = ref(0);
+  const menuVersion = ref(0); //让menuRouters更新
 
   const menuRouters = computed<MenuItemRouteType[]>(() => {
     const flatRoutes: MenuItemRouteType[] = router
@@ -61,7 +61,8 @@ export const useMenuStore = defineStore("menu", () => {
         }
       }
     }
-    console.log(menuVersion.value, "menu version"); //不能删除
+    console.log(router.getRoutes(), "原 router");
+    console.log(menuVersion.value, "menu version in menuStore"); //不能删除
     console.log(tree, "tree");
     return tree;
   });

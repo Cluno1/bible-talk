@@ -1,4 +1,4 @@
-import type { BibleTalkDataType } from "@/store/bibleTalkStore";
+import type { BibleTalkDataType } from "@/type/page";
 
 export const btDataDemo: BibleTalkDataType = {
   id: "cs-ai",

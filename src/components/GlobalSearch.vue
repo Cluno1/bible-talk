@@ -1,29 +1,25 @@
 <template>
     <div class="lg:hidden">
         <el-autocomplete v-model="searchInput" size='large' :fetch-suggestions="querySearch" clearable class="w-50"
-            placeholder="search" @select="handleSelect">
+            placeholder="search" @select="handleSelect" @keyup.enter.native="handleClick">
             <template #append>
                 <font-awesome-icon icon="fa-solid fa-paper-plane" style="color: gray;" v-show="!loading"
-                    @click="handleSelect" />
-                <font-awesome-icon icon="spinner" spin style="color: gray;" v-show="loading" @click="handleSelect" />
+                    @click="handleClick" />
+                <font-awesome-icon icon="spinner" spin style="color: gray;" v-show="loading" />
             </template>
         </el-autocomplete>
     </div>
     <!-- pc 端 -->
     <div class="hidden lg:block w-full">
         <el-autocomplete v-model="searchInput" :fetch-suggestions="querySearch" clearable class="w-50"
-            placeholder="search" @select="handleSelect">
+            placeholder="search" @select="handleSelect" @keyup.enter.native="handleClick">
             <template #append>
                 <font-awesome-icon icon="fa-solid fa-paper-plane" style="color: gray;" v-show="!loading"
-                    @click="handleSelect" />
-                <font-awesome-icon icon="spinner" spin style="color: gray;" v-show="loading" @click="handleSelect" />
+                    @click="handleClick" />
+                <font-awesome-icon icon="spinner" spin style="color: gray;" v-show="loading" />
             </template>
         </el-autocomplete>
-
-
     </div>
-
-
 </template>
 
 
@@ -33,32 +29,26 @@ import { useRouter, type RouteRecordNormalized } from 'vue-router';
 import { useBibleTalkStore } from '@/store/bibleTalkStore';
 import { useMenuStore } from '@/store/menuStore';
 import { useAlbumConfigStore } from '@/store/albumStore';
-import type { MusicAlbum, MusicType } from '@/type/music';
 import { ElMessage } from 'element-plus';
 import { useAudioConfigStore } from '@/store/audioStore';
 import { useConfigStore } from '@/store/configStore';
+import type { GlobalSearchCallBackType } from '@/type/search';
 
 const props = defineProps<{
     type: 'music' | 'global' | 'page' | 'musicAlbum' //默认是搜索全部
 }>()
 
-/**               类型定义       */
-export type GlobalSearchCallBackType = {
-    value: string | number,
-    router?: string,//页面路由
-    musicAlbum?: MusicAlbum,
-    song?: MusicType,
-    //other ...
-}
 
 /**   预设的一些搜索快捷值 和 占位值 */
 const pageString = '^page\u00A0\u00A0\u00A0\u00A0' //page 占位值
 const songString = '!song\u00A0\u00A0\u00A0\u00A0' //song 占位值
 const musicAlbumString = '@album\u00A0\u00A0\u00A0\u00A0' //song 占位值
+const removeString = 'rm\u00A0\u00A0\u00A0\u00A0' //song 占位值
 
 const pagePre = '^' //page 预设
 const songPre = '!' //song 预设
 const musicAlbumPre = '@' //musicAlbum 预设
+const removePre = 'rm'
 
 const loading = ref(false)
 const bibleTalkStore = useBibleTalkStore()
@@ -119,8 +109,6 @@ function formatSearchInput(val: string): {
             preString: containsMatch,
         };
     }
-
-    // 3. 原来的逻辑：检查单字符前缀
     switch (val?.charAt(0)) {
         case pagePre:
             return {
@@ -156,7 +144,7 @@ const routerData = computed(() => {
     })
 })
 
-//页面的数据 搜索页面  模糊搜索
+//页面的数据 搜索页面  模糊搜索  不包括占位路由
 function getPage(queryString: string): GlobalSearchCallBackType[] {
     if (!props.type || props.type == 'global' || props.type == 'page') {
         return routerData.value.filter((_i) => typeof _i.value === 'string' && _i.value.includes(queryString))
@@ -164,6 +152,21 @@ function getPage(queryString: string): GlobalSearchCallBackType[] {
         return []
     }
 }
+
+//页面的数据  包括占位路由  用于rm 时
+function getAllPage(queryString: string): GlobalSearchCallBackType[] {
+    if (!props.type || props.type == 'global' || props.type == 'page') {
+        return router.getRoutes().filter(_i => pageString + String(_i.name).includes(queryString) && _i.path !== '/' && _i.meta?.hidden != true).map(_i => {
+            return {
+                value: pageString + (_i.meta?.title || _i.name),
+                router: _i.path
+            }
+        })
+    } else {
+        return []
+    }
+}
+
 
 
 // 歌曲 搜索 模糊搜索
@@ -194,14 +197,54 @@ function getMusicAlbum(queryString: string): GlobalSearchCallBackType[] {
     return []
 }
 
+function isRemove(val: string) {
+    if (val.slice(0, 2) === 'rm') {
+        return {
+            remove: true,
+            formatVal: val.slice(2).trim()
+        }
+    } else {
+        return {
+            remove: false,
+            formatVal: val,
+        }
+    }
+}
+
 
 //用户输入一些东西后,可供用户选择的值... 函数
 const querySearch = (queryString: string, cb: any) => {
 
     const results: GlobalSearchCallBackType[] = []
 
+    let removeSearchData = new Map<'page' | 'song' | 'musicAlbum', GlobalSearchCallBackType[]>()
+
+    let a = isRemove(queryString)
+    if (a.remove) {
+        if (a.formatVal.includes('^')) {
+            removeSearchData.set('page', getAllPage(a.formatVal))
+        } else if (a.formatVal.includes('!')) {
+            removeSearchData.set('song', getSong(a.formatVal))
+        } else if (a.formatVal.includes('@')) {
+            removeSearchData.set('musicAlbum', getMusicAlbum(a.formatVal))
+        } else {
+            removeSearchData.set('page', getAllPage(a.formatVal))
+            removeSearchData.set('musicAlbum', getMusicAlbum(a.formatVal))
+            removeSearchData.set('song', getSong(a.formatVal))
+        }
+
+        for (const [, v] of removeSearchData.entries()) {
+            results.push(...v.map(_i => {
+                return {
+                    ..._i,
+                    value: removeString + _i.value
+                }
+            }))
+        }
+    }
+
     const { formatVal, preString } = formatSearchInput(queryString)
-    console.log(formatVal, preString, 'formatval')
+
     if (preString) {
         if (preString.includes('^')) {
             results.push(...getPage(formatVal))
@@ -221,20 +264,66 @@ const querySearch = (queryString: string, cb: any) => {
 }
 
 
-
+//用户点击 建议  的函数 
 function handleSelect(item: GlobalSearchCallBackType) {
     if (loading.value) {
         return;
     }
     loading.value = true;
-    setTimeout(() => {
-        loading.value = false
-    }, 10_000);
 
-    const format = formatSearchInput(searchInput.value)
 
-    console.log(searchInput.value, format.preString, format.formatVal, 'format')
+    //删除 
+    if (String(item.value).slice(0, 2) === removePre) {
 
+        if (item.router) {
+            console.log(item, 'rm ?? item')
+
+            const a = router.getRoutes().find(_i => _i.path === item.router)// router:/setting
+            console.log(a, 'what is a')
+            if (a) {
+                //default router
+                if (a.name == 'setting') {
+                    searchInput.value = ''
+                    config.defaultRouterSwitch('setting', false)
+
+                    ElMessage.success('删除页面成功')
+                } else if (a.name == 'audio-play') {
+                    searchInput.value = ''
+                    loading.value = false
+                    config.defaultRouterSwitch('audio-play', false)
+                    ElMessage.success('删除页面成功')
+                } else {
+                    console.log(a.name, 'name')
+                    if (!config.removeRoute(a.name as string)) {
+                        ElMessage.error('删除页面失败')
+                    } else {
+                        ElMessage.success('删除页面成功')
+                        searchInput.value = ''
+                        loading.value = false
+                        bibleTalkStore.removeData(String(a?.meta?.dataId))
+                    }
+                }
+            }
+            loading.value = false;
+            return
+        } else if (item.song) {
+            albumConfigStore.clearMusic(item.song.id)
+            audioStore.removeAudio(item.song)
+            ElMessage.success('删除歌曲成功')
+            searchInput.value = ''
+            loading.value = false;
+            return
+        } else if (item.musicAlbum) {
+            albumConfigStore.clearAlbum(item.musicAlbum.id)
+            ElMessage.success('删除专辑成功')
+            searchInput.value = ''
+            loading.value = false;
+            return
+        }
+    }
+
+
+    //具体分类
     if (item.router) {
         searchInput.value = ''
         router.push(item.router)
@@ -244,7 +333,6 @@ function handleSelect(item: GlobalSearchCallBackType) {
         audioStore.addAudioList(item.song)
         ElMessage.success('添加歌曲成功')
     } else if (item.musicAlbum) {
-
         searchInput.value = ''
         router.push({
             path: '/music-album',
@@ -252,37 +340,62 @@ function handleSelect(item: GlobalSearchCallBackType) {
                 id: item.musicAlbum.id,
             }
         })
-
-    } else {
-        try {
-            if (bibleTalkStore.getData(searchInput.value)) {
-                loading.value = false
-                return ElMessage.success('添加页面成功')
-            }
-            if (albumConfigStore.searchAlbumByClound(searchInput.value)) {
-                loading.value = false
-                config.showAudioRouter()
-                return ElMessage.success('添加专辑成功')
-            }
-            if (albumConfigStore.searchMusicById(searchInput.value)) {
-                loading.value = false
-                config.showAudioRouter()
-                router.push('/audio-play')
-                return ElMessage.success('添加歌曲成功')
-            }
-            loading.value = false
-            ElMessage.error('找不到数据')
-
-        } catch (e: any) {
-            loading.value = false
-            ElMessage.error(e.message || '搜索错误')
-        }
-
     }
     loading.value = false;
 
+}
 
+function handleClick() {
+    if (searchInput.value === '') {
+        return
+    }
+    if (loading.value) {
+        return;
+    }
+    loading.value = true;
 
+    const { formatVal } = formatSearchInput(searchInput.value)
+
+    try {
+        //default router
+        if (formatVal === 'setting') {
+            loading.value = false
+            config.defaultRouterSwitch('setting')
+            router.push('/setting')
+            return;
+        } else if (formatVal === 'audio') {
+            loading.value = false
+            config.defaultRouterSwitch('audio-play')
+            router.push('/audio-play')
+            return;
+        }
+
+        if (bibleTalkStore.getData(formatVal)) {
+            loading.value = false
+            searchInput.value = ''
+            return ElMessage.success('添加页面成功')
+        }
+        if (albumConfigStore.searchAlbumByClound(formatVal)) {
+            loading.value = false
+            searchInput.value = ''
+            config.defaultRouterSwitch('audio-play')
+            return ElMessage.success('添加专辑成功')
+        }
+        if (albumConfigStore.searchMusicById(formatVal)) {
+            loading.value = false
+            searchInput.value = ''
+            config.defaultRouterSwitch('audio-play')
+            router.push('/audio-play')
+            return ElMessage.success('添加歌曲成功')
+        }
+
+        ElMessage.error('找不到数据')
+
+    } catch (e: any) {
+
+        ElMessage.error(e.message || '搜索错误')
+    }
+    loading.value = false;
 }
 
 </script>

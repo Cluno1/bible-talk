@@ -3,10 +3,19 @@ import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import { resolve } from "path";
-
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx(), tailwindcss()],
+  plugins: [
+    vue(),
+    vueJsx(),
+    tailwindcss(),
+    createSvgIconsPlugin({
+      iconDirs: [path.resolve(process.cwd(), "src/assets/icons")],
+      symbolId: "icon-[dir]-[name]",
+    }),
+  ],
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),

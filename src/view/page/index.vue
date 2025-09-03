@@ -17,9 +17,10 @@
 <script lang="ts" setup>
 import OverView from '@/components/OverView.vue';
 import Article from '@/components/Article.vue';
-import { useBibleTalkStore, type BibleTalkDataType } from '@/store/bibleTalkStore';
+import { useBibleTalkStore } from '@/store/bibleTalkStore';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import type { BibleTalkDataType } from '@/type/page';
 const bibleTalkStore = useBibleTalkStore()
 const nowRoute = useRoute()
 
@@ -39,11 +40,19 @@ watch(nowRoute, () => {
 function initType() {
   // 1. 把当前路径按 '/' 拆开
   const segs = nowRoute.fullPath.split('/').filter(Boolean) // filter 掉空串
+  console.log(segs,'segs')
   if (!segs.length) return 'error'
 
   // 2. 拿到第一段作为 key，去 store 查数据
-  const key = segs[0]
-  const dataInStore = bibleTalkStore.datastorage.get(key)
+  
+  const key = segs[0]//key是englishName
+  let dataInStore=null
+  for(let [,v] of bibleTalkStore.datastorage.entries()){
+    if(v.englishName===key)
+    dataInStore=v;
+  }
+  
+  console.log(dataInStore,'dataInStore')
   if (!dataInStore) return 'error'
 
   // 3. 把数据同步到外部响应式变量 data（假设你外部定义了）
@@ -66,7 +75,7 @@ function initType() {
     return 'overview'
   } else {
 
-    (data.value?.children || []).forEach(_i => {
+    (data.value?.children || []).forEach((_i) => {
       console.log(_i, '_i')
       if (_i.englishName == last) {
         data.value = _i;

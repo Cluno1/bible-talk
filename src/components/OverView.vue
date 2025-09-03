@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { BibleTalkDataType } from '@/store/bibleTalkStore';
+import type { BibleTalkDataType } from '@/type/page';
 import { useConfigStore } from '@/store/configStore';
 import * as icons from '@element-plus/icons-vue';
 

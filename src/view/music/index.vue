@@ -36,9 +36,10 @@
             <!-- 1. 封面 -->
             <div :class="['album-cover']" :style="{ 'backgroundColor': config.lightMainColor }">
 
-                <img v-if="audioConfig.currentAudio?.pic && audioConfig.currentAudio.pic.length > 0"
-                    :src="audioConfig.currentAudio.pic[picVersion % audioConfig.currentAudio.pic.length]"
+                <img v-if="albumPicture.length>0"
+                    :src="albumPicture[picVersion % albumPicture.length]"
                     alt="Album Cover" />
+                
                 <div class="loading">
                     <font-awesome-icon icon="spinner" spin /> 加载中...
                 </div>
@@ -179,9 +180,10 @@ import { ElMessage } from 'element-plus'
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import type { MusicType } from '@/type/music'
+import { useAlbumConfigStore } from '@/store/albumStore'
 const config = useConfigStore()
 const audioConfig = useAudioConfigStore()
-
+const albumStore=useAlbumConfigStore()
 /* ---------- 音频实例 ---------- */
 const audio = new Audio(audioConfig.getInitAudio().link)
 
@@ -193,7 +195,21 @@ const currentTime = ref(0)
 const duration = ref(0)
 const volume = ref(100)
 const lastVolume = ref(1)
-
+const albumPicture=computed<string[]>(()=>{
+    const _a=audioConfig.currentAudio?.pic||audioConfig.currentAudio?.albumPic||[]
+    if(_a.length>0){
+        return  _a
+    }else{
+        const _b=audioConfig.currentAudio?.album
+        if(_b){
+            const c=albumStore.searchAlbum(_b)
+            if(c.length>0){
+                return c[0].pic||[]
+            }
+        }
+    }
+    return []
+})
 const picVersion = ref(0)
 let picTimer: any = ''
 

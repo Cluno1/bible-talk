@@ -17,12 +17,10 @@ export const useAudioConfigStore = defineStore("audioConfig", () => {
         currentLyrics.value = await loadLrc(newVal.lyricsLink);
       } catch (e: any) {
         currentLyrics.value = getInitLyrics();
-        console.log(e?.message || "error from lyrics load");
       }
     } else {
       currentLyrics.value = getInitLyrics();
     }
-    console.log(currentLyrics.value, "currentLyrics.value");
   });
 
   function setCurrentAudio(val: MusicType | MusicType[]) {
@@ -32,6 +30,10 @@ export const useAudioConfigStore = defineStore("audioConfig", () => {
       currentAudio.value = val;
     }
   }
+  /**
+   * 添加到播放列表
+   * @param val
+   */
   function addAudioList(val: MusicType | MusicType[]) {
     if (Array.isArray(val)) {
       val.forEach((item) => addAudioList(item));
@@ -43,21 +45,31 @@ export const useAudioConfigStore = defineStore("audioConfig", () => {
 
   function getInitAudio(): MusicType {
     return {
-      id: -1,
+      id: "-1",
       link: "",
       pic: [], //歌曲图片 封面
     };
   }
-
+  //从列表里面删除某音乐
   function deleteAudioFromList(val: MusicType) {
     list.value = list.value.filter((_i) => _i.id !== val.id);
   }
+
+  /**让该音乐从播放器彻底消失  包括:删除列表里,历史里, 当前的 */
+  function removeAudio(val: MusicType) {
+    deleteAudioFromList(val);
+    historyAudio.value = historyAudio.value.filter((_i) => _i.id !== val.id);
+    if (currentAudio.value?.id === val.id) {
+      currentAudio.value = null;
+    }
+  }
+
+  /**
+   * 清除所有列表歌曲
+   */
   function clearAudioList() {
     list.value = [];
   }
-  watch(currentAudio, () => {
-    console.log(currentAudio.value, "currentAudio new");
-  });
 
   return {
     list,
@@ -69,5 +81,6 @@ export const useAudioConfigStore = defineStore("audioConfig", () => {
     deleteAudioFromList,
     getInitAudio,
     currentLyrics,
+    removeAudio,
   };
 });

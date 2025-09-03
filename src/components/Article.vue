@@ -76,7 +76,7 @@ import { getDarkerActiveColor } from '@/utils/getAutoColor'
 import { ref } from 'vue'
 import router from '@/router'
 import { Back } from '@element-plus/icons-vue'
-import type { BibleTalkDataType } from '@/store/bibleTalkStore'
+import type { BibleTalkDataType } from '@/type/page'
 
 
 

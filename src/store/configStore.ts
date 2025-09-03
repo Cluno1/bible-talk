@@ -14,9 +14,9 @@ import {
   getLighterActiveColor,
 } from "../utils/getAutoColor";
 import { useDark, useToggle } from "@vueuse/core";
-import type { BibleTalkDataType } from "./bibleTalkStore";
-import { useRouter, type RouteRecordRaw } from "vue-router";
+import { useRouter } from "vue-router";
 import { useMenuStore } from "./menuStore";
+import type { BibleTalkDataType } from "@/type/page";
 
 /**
  * 组件配置
@@ -76,18 +76,19 @@ export const useConfigStore = defineStore("config", () => {
     setColor(blue, white);
   }
   /**
-   * 删除name 所在的 根路由
+   * 删除name 所在的 根路由  路由有唯一名称,根据名称删除
    * 返回true 则删除成功,返回false则删除失败, 因为要删除基础路由 home or bible
    * @param name
    * @returns
    */
   function removeRoute(name: string): boolean {
-    if (name === "home" || name === "bible") {
+    if (name === "home") {
       return false;
     }
     // 如果已存在同名路由，先删除
     if (router.hasRoute(name)) {
       router.removeRoute(name);
+      menuStore.menuVersion++;
     }
 
     return true;
@@ -103,27 +104,46 @@ export const useConfigStore = defineStore("config", () => {
    * @param baseName
    */
   function addBibleTalkRouters(data: BibleTalkDataType, baseName?: string) {
+    console.log(data, "data in addBibleTalkRouters");
     //子路由
     if (baseName || !data.hasOverview) {
-      const routeName = (baseName ? baseName + "-" : "/") + data.englishName; //目前该路由名称
-      if (!removeRoute(routeName)) {
-        return;
-      }
-      console.log("添加一个子路由,path和name", routeName);
-      if (baseName)
+      if (baseName) {
+        if (!removeRoute(baseName + "-" + data.englishName)) {
+          return;
+        }
+        console.log("baseName有值", baseName + "-" + data.englishName);
         router.addRoute(baseName, {
-          path: routeName, // 如:cpu
-          name: routeName,
-          component: () => import("@/view/play/index.vue"),
-          meta: { title: data.name, rank: data.rank || 100, icon: data.icon }, //没有rank,固定都是100
+          path: baseName + "-" + data.englishName, // 如:cpu
+          name: baseName + "-" + data.englishName,
+          component: () => import("@/view/page/index.vue"),
+          meta: {
+            title: data.name,
+            rank: data.rank || 100,
+            icon: data.icon || "PieChart",
+            dataId: data.id,
+          }, //没有rank,固定都是100
         });
-      else
+      } else {
+        //就是个单页面
+        console.log(
+          "baseName没有值但是 hasOverView false或没有",
+          "/" + data.englishName
+        );
+        if (!removeRoute(data.englishName)) {
+          return;
+        }
         router.addRoute({
-          path: routeName, // 如:cpu
-          name: routeName,
-          component: () => import("@/view/play/index.vue"),
-          meta: { title: data.name, rank: data.rank || 100, icon: data.icon }, //没有rank,固定都是100
+          path: "/" + data.englishName, // 如:cpu
+          name: data.englishName,
+          component: () => import("@/view/page/index.vue"),
+          meta: {
+            title: data.name,
+            rank: data.rank || 100,
+            icon: data.icon || "CollectionTag",
+            dataId: data.id,
+          }, //没有rank,固定都是100
         });
+      }
     } else {
       //顶格父路由
       const routeName = data.englishName;
@@ -135,15 +155,16 @@ export const useConfigStore = defineStore("config", () => {
       //父路由有孩子节点
       if (data.children && data.children.length > 0) {
         //先添加空的 父节点
-        console.log("添加一个空占位路由,path和name", fullPath, routeName);
+        console.log("添加一个空占位路由,就是父路由", fullPath, routeName);
         router.addRoute({
           path: fullPath, // 如:/computer
           name: routeName,
-          component: () => import("@/view/play/PlaceHold.vue"),
+          component: () => import("@/view/page/PlaceHold.vue"),
           meta: {
             title: data.name,
             rank: data.rank || 100,
             icon: data.icon || "Pointer",
+            dataId: data.id,
           }, //没有rank,固定都是100
         });
 
@@ -153,22 +174,28 @@ export const useConfigStore = defineStore("config", () => {
         router.addRoute(routeName, {
           path: routeName + "-" + "overview",
           name: routeName + "-" + "overview",
-          component: () => import("@/view/play/index.vue"),
-          meta: { title: "overview", rank: 0, icon: data.icon }, //overview 固定都是0
+          component: () => import("@/view/page/index.vue"),
+          meta: {
+            title: "overview",
+            rank: 0,
+            icon: data.icon || "PieChart",
+            dataId: data.id,
+          }, //overview 固定都是0
         });
 
         data.children.forEach((_i) => addBibleTalkRouters(_i, routeName));
       } else {
         //父路由无孩子节点,仅仅添加父路由
-        console.log("添加一个路由,path和name", fullPath, routeName);
+        console.log("添加一个单路由", fullPath, routeName);
         router.addRoute({
           path: fullPath,
           name: routeName,
-          component: () => import("@/view/play/index.vue"),
+          component: () => import("@/view/page/index.vue"),
           meta: {
             title: data.name,
             rank: data.rank || 100,
-            icon: data.icon || "Pointer",
+            icon: data.icon || "CollectionTag",
+            dataId: data.id,
           }, //没有rank,固定都是100
         });
       }
@@ -176,31 +203,18 @@ export const useConfigStore = defineStore("config", () => {
     return menuStore.menuVersion++;
   }
 
-  /**
-   *  兼顾判断和让 audio播放页面显示在menu上
-   */
-  function showAudioRouter() {
-    console.log("after 1:", router.getRoutes());
-
-    const ob: RouteRecordRaw = {
-      path: "/audio-play",
-      name: "audio-play",
-      component: () => import("@/view/music/index.vue"),
-      meta: { title: "Audio Play", icon: "Headset", rank: 3, hidden: false }, //不隐藏
-    };
-
-    const _arr = router.getRoutes().filter((_i) => _i.name === ob.name);
-    if (_arr.length > 0) {
-      console.log("after 2:", router.getRoutes());
-      if (typeof _arr[0].meta?.hidden == "boolean" && _arr[0].meta?.hidden) {
-        console.log("add audio router");
-        removeRoute(String(ob.name));
-        router.addRoute(ob);
-        console.log("after 3:", router.getRoutes());
-        menuStore.menuVersion++;
+  function defaultRouterSwitch(
+    type: "setting" | "audio-play",
+    show: boolean = true
+  ) {
+    const ob = router.getRoutes().find((_i) => _i.name === type);
+    console.log(ob, "ob");
+    if (ob) {
+      if (show) {
+        ob.meta.hidden = false;
+      } else {
+        ob.meta.hidden = true;
       }
-    } else {
-      router.addRoute(ob);
       menuStore.menuVersion++;
     }
   }
@@ -219,6 +233,6 @@ export const useConfigStore = defineStore("config", () => {
     audioPlayTextColor,
     addBibleTalkRouters,
     removeRoute,
-    showAudioRouter,
+    defaultRouterSwitch,
   };
 });

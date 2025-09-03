@@ -1,4 +1,4 @@
-import type { BibleTalkDataType } from "@/store/bibleTalkStore";
+import type { BibleTalkDataType } from "@/type/page";
 
 /* 1. 什么是福音 --------------------------------------------------------- */
 const sec1: BibleTalkDataType = {

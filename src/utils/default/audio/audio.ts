@@ -1,5 +1,5 @@
 import type { MusicType } from "@/type/music";
-import { ihopeAlbum } from "./musicAlbum.test";
+import { ihopeAlbum } from "../album/ihope";
 
 export const musicdemo_1: MusicType = {
   id: 'old-man-sea',
@@ -24,4 +24,4 @@ export const musicdemo_2: MusicType = {
 };
 
 
-export const localMusicsDemo:MusicType[]=[musicdemo_1,musicdemo_2,...ihopeAlbum.musics]
+export const localAudios:MusicType[]=[musicdemo_1,musicdemo_2,...ihopeAlbum.musics]//包括了预设的音乐和 本地专辑的音乐

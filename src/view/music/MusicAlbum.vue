@@ -57,6 +57,7 @@ onMounted(() => {
 
     if (id) {
         let a = store.albums.get(id)
+        console.log(a,'a album')
         if (a) {
 
             if (a.pic && (a.pic || []).length > 0)

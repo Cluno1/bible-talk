@@ -1,102 +1,4 @@
-// import type { MusicAlbum } from "@/store/audioStore";
-
 import type { MusicAlbum } from "@/type/music";
-
-// const Listdata = [
-//   "105-你是否梦想到那地",
-//   "109-你的信实广大",
-//   "111-hallelujah",
-//   "112-你真伟大",
-//   "114 hallelujah赞美耶和华",
-//   "116-你的名何等威严",
-//   "117-我已经决定",
-//   "118 我确知我救主活着",
-//   "119我要求告耶和华",
-//   "120 我会庆祝",
-//   "122-我不以神的名为耻",
-//   "123-神的国度-English",
-//   "123-神的国度-中文",
-//   "127-他名称为奇妙,",
-//   "131-奋起上主子民",
-//   "132-Lord God, Almighty",
-//   "133-看何等荣耀景象",
-//   "134-唱Hal-le-lu-jah",
-//   "136- Walking On Heaven's Road",
-//   "137-生命之泉",
-//   "138-感谢神",
-//   "139-奇妙神",
-//   "141-哪有朋友像耶稣",
-//   "142-同往迦南地",
-//   "145-同往锡安",
-//   "146-都到天国",
-//   "147-世界的光",
-//   "148-倚靠耶稣永远膀臂",
-//   "150-耶和华我的心仰望你",
-//   "151-赐生命的主",
-//   "154-阿拉法俄梅戛",
-//   "155-常常喜乐,",
-//   "170-万王之王",
-//   "174-All in all",
-//   "179-带领我今日得人,",
-//   "182-诗篇63",
-//   "183-Let your living water flow",
-//   "191-主，我高举你的名",
-//   "195-神的羔羊",
-//   "198-耶稣是主",
-//   "203-欢呼主耶稣",
-//   "206-耶和华所定的日子",
-//   "211-教导我耐心等",
-//   "212-向高处行",
-//   "215-信靠顺服",
-//   "215-信靠顺服-English",
-//   "219-仰望那山",
-//   "221-我罪极重",
-//   "225-有一位神",
-//   "233-喜传福音",
-//   "237-耶稣恩友",
-//   "253-万福源头",
-//   "259-我以祷告来到你跟前",
-//   "265-欢声唱",
-//   "269-我要向高山举目",
-//   "271-美哉主耶稣",
-//   "275-爱救了我",
-//   "278-为我异象,",
-//   "279-靠近十架,",
-//   "280-求主同住,",
-//   "284-主耶和华是我牧者",
-//   "285-使我做你和平差使",
-//   "286 Victory in Jesus",
-//   "288-充满我",
-//   "289-古旧十架",
-//   "291-Anchor for the Soul",
-//   "292 Lead me to the Rock",
-//   "293-有人在为你祷告",
-//   "主看顾小羊",
-//   "Joy to the world",
-//   "O Come, All Ye Faithfull",
-//   "Silent Night",
-//   "Hark! The Herald Angles Sing"
-// ];
-
-// export const ihopeAlbum:MusicAlbum = {
-//     id: "ihope",
-//     pic:['https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/pic/star-4399.jpg'],
-//     authorName:'IHOPE',
-//     albumTitle:'Ihope',
-//     musics: [{
-//         id: "ihope-289",//前缀:ihope-  , 如果有数字则写入数字,如果重复则再后面使用一个随机字母,注意,id唯一不能重复
-//         link: "https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/music/289-古旧十架.mp3",//前缀:'https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/music/',后缀:'.mp3'
-//         songTitle:'289-古旧十架',// 英文名称则这里置空   ,如果有数字都需要带数字
-//         songEnglishTitle:'',//如果是英文名称填入这里, 如果有数字都需要带数字
-//         album:'ihope',//不变
-//         artistName:'IHOPE',//不变
-//     },...]
-// }
-
-// // https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/music/289-古旧十架.mp3
-
-
-
 export const ihopeAlbum: MusicAlbum = {
   id: "ihope",
   pic: [
@@ -110,7 +12,7 @@ export const ihopeAlbum: MusicAlbum = {
       link: "https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/music/105-你是否梦想到那地.mp3",
       songTitle: "105-你是否梦想到那地",
       songEnglishTitle: "",
-      album: "ihope",
+      album: "Ihope",//里面是album的albumTitle
       artistName: "IHOPE",
     },
     {

@@ -2,19 +2,19 @@ import type { MusicAlbum, MusicType } from "@/type/music";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import Fuse from "fuse.js";
-import { ihopeAlbum } from "@/test/musicAlbum.test";
-import { localMusicsDemo } from "@/test/audio.text";
+import { ihopeAlbum } from "@/utils/default/album/ihope";
 import { useAudioConfigStore } from "./audioStore";
+import { localAudios } from "@/utils/default/audio/audio";
 
 export const useAlbumConfigStore = defineStore("albumConfig", () => {
   const audioConfig = useAudioConfigStore();
   /* ===================== 状态 ===================== */
   // 专辑映射  id -> MusicAlbum
   const albumsVersion = ref(0);
-  const albums = new Map<string | number, MusicAlbum>();
+  const albums = new Map<string, MusicAlbum>();
 
   // 单曲映射  id -> MusicType
-  const musics = new Map<string | number, MusicType>();
+  const musics = new Map<string, MusicType>();
   const musicsVersion = ref(0);
 
   /* ===== Fuse 索引 =====
@@ -46,8 +46,13 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
     albumsVersion.value++;
   }
 
-  /** 删除整张专辑（包括里面包含的歌曲） */
-  function clearAlbum(id: string | number) {
+  /**
+   * 删除整张专辑（包括里面包含的歌曲）
+   * @param id 专辑id
+   * @returns
+   */
+  function clearAlbum(id: string) {
+    console.log(id, "id val");
     const album = albums.get(id);
     if (!album) return;
 
@@ -56,33 +61,48 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
     });
 
     albums.delete(id);
+    musicsVersion.value++;
+    albumsVersion.value++;
   }
 
   /** 相册 严格查询 联网查询 根据 id 查找专辑，不存在返回 undefined */
-  function searchAlbumByClound(id: string | number): MusicAlbum | undefined {
+  function searchAlbumByClound(
+    searchVal: string | number
+  ): MusicAlbum | undefined {
+    //id全部转成字符串去搜索
+
+    let id = String(searchVal);
+    if (id.charAt(0) === "@") {
+      id = id.slice(1);
+    }
+
     const _a = albums.get(id);
     if (_a) {
       return _a;
     } else {
-      //联网搜索,搜索线上的album;
-
       //这里搜索本地
       if (id == ihopeAlbum.id) {
         addAlbum(ihopeAlbum);
         return ihopeAlbum;
       }
+
+      //联网搜索,搜索线上的album;
     }
     return undefined;
   }
 
-  /** 相册 模糊查询 根据 id 查找专辑，不存在返回 空[] */
-  function searchAlbum(id: string | number): MusicAlbum[] {
+  /** 相册 模糊查询 根据 字眼 查找专辑，不存在返回 空[] */
+  function searchAlbum(val: string | number): MusicAlbum[] {
+    let str = String(val);
+    if (str.charAt(0) === "@") {
+      str = str.slice(1);
+    }
     const re: MusicAlbum[] = [];
     albums.forEach((_val, _key) => {
       if (
-        String(_key).includes(String(id)) ||
-        String(_val.albumTitle).includes(String(id)) ||
-        String(_val.albumEnglishTitle).includes(String(id))
+        String(_key).includes(String(str)) ||
+        String(_val.albumTitle).includes(String(str)) ||
+        String(_val.albumEnglishTitle).includes(String(str))
       ) {
         re.push(_val);
       }
@@ -90,9 +110,7 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
     return re;
   }
 
-  /* ===================== 单曲相关 ===================== */
-
-  /** 新增/覆盖单曲 开放给其他页面使用  每增加一个就更新版本,推荐添加album时直接自己写 */
+  /** 新增/覆盖单曲 开放给其他页面使用  每增加一次就更新版本 */
   function addMusic(music: MusicType | MusicType[]) {
     if (Array.isArray(music)) {
       music.forEach((_i) => musics.set(_i.id, _i));
@@ -103,15 +121,31 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
     musicsVersion.value++;
   }
 
-  /** 删除单曲（含 titleMap 清理） */
-  function clearMusic(id: string | number) {
+  /** 删除单曲  也从对应专辑里面删除 TODO */
+  function clearMusic(id: string) {
+    //music Id
     const music = musics.get(id);
     if (!music) return;
+    if (music.album) {
+      //album的name
+      let hasAlbum;
+      for (const [, v] of albums.entries()) {
+        if (v.albumTitle == music.album || v.albumEnglishTitle == music.album) {
+          hasAlbum = v;
+        }
+      }
+      if (hasAlbum) {
+        hasAlbum.musics = hasAlbum.musics.filter((_i) => _i.id !== music.id);
+      }
+    }
     musics.delete(id);
+    //再删除对应audio里面的列表
+    audioConfig.removeAudio(music);
+    musicsVersion.value++;
   }
 
   /** 根据 id 查找 已经缓存在本地的 单曲，不存在返回 undefined */
-  function searchMusic(id: string | number): MusicType | undefined {
+  function searchMusic(id: string): MusicType | undefined {
     return musics.get(id);
   }
 
@@ -119,8 +153,13 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
    * 模糊查询,不会查询 联网
    * 先用 val 当 id 查；查不到再用 val 当歌曲名称查
    */
-  function searchMusicByVal(val: string | number): MusicType[] {
-    if (val !== 0 && !val) {
+  function searchMusicByVal(v: string): MusicType[] {
+    let val = v;
+    if (val.charAt(0) === "!") {
+      val = val.slice(1);
+    }
+
+    if (val !== "0" && !val) {
       return Array.from(musics.values());
     }
     const re = [];
@@ -143,23 +182,26 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
    * 查询歌曲 通过id 联网查询
    * @param id
    */
-  function searchMusicById(id: string | number): MusicType | undefined {
+  function searchMusicById(v: string): MusicType | undefined {
+    let id = v;
+    if (id.charAt(0) === "!") {
+      id = id.slice(1);
+    }
+
     const a = searchMusic(id);
     if (a) {
       //添加到 播放列表
       audioConfig.addAudioList(a);
       return a;
     } else {
-      //联网查询  todo ...
-
       //现在本地查询:
-
-      const _a = localMusicsDemo.find((_i) => _i.id === id);
+      const _a = localAudios.find((_i) => _i.id === id);
       if (_a) {
         addMusic(_a);
         audioConfig.addAudioList(_a);
         return _a;
       }
+      //联网查询  todo ...
 
       return undefined;
     }
