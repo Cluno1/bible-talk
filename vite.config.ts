@@ -7,6 +7,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/bible-talk/',   // 对应 GitHub Pages 的子路径
   plugins: [
     vue(),
     vueJsx(),
