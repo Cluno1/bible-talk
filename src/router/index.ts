@@ -44,7 +44,7 @@ const routes: RouteRecordRaw[] = [
     path: "/video",
     name: "video",
     component: Video,
-    meta: { title: "Video Play", icon: "Headset", rank: 3, hidden: false },
+    meta: { title: "Video Play", icon: "Headset", rank: 3, hidden: true },
   },
   {
     path: "/bible",
