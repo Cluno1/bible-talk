@@ -33,9 +33,10 @@ import { ElMessage } from 'element-plus';
 import { useAudioConfigStore } from '@/store/audioStore';
 import { useConfigStore } from '@/store/configStore';
 import type { GlobalSearchCallBackType } from '@/type/search';
+import { useVideoStore } from '@/store/videoStore';
 
 const props = defineProps<{
-    type: 'music' | 'global' | 'page' | 'musicAlbum' //默认是搜索全部
+    type: 'music' | 'global' | 'page' | 'musicAlbum' | 'video' //默认是搜索全部
 }>()
 
 
@@ -44,11 +45,13 @@ const pageString = '^page\u00A0\u00A0\u00A0\u00A0' //page 占位值
 const songString = '!song\u00A0\u00A0\u00A0\u00A0' //song 占位值
 const musicAlbumString = '@album\u00A0\u00A0\u00A0\u00A0' //song 占位值
 const removeString = 'rm\u00A0\u00A0\u00A0\u00A0' //song 占位值
+const videoString = '%video\u00A0\u00A0\u00A0\u00A0'
 
 const pagePre = '^' //page 预设
 const songPre = '!' //song 预设
 const musicAlbumPre = '@' //musicAlbum 预设
 const removePre = 'rm'
+const videoPre = '%'
 
 const loading = ref(false)
 const bibleTalkStore = useBibleTalkStore()
@@ -79,13 +82,14 @@ const config = useConfigStore()
 const searchInput = ref('')
 
 const albumConfigStore = useAlbumConfigStore()
+const videoStore = useVideoStore()
 const audioStore = useAudioConfigStore()
 
 function formatSearchInput(val: string): {
     formatVal: string;
     preString: string | null;
 } {
-    const _fullPrefixes = [pageString, songString, musicAlbumString]; // 包含空格的完整前缀
+    const _fullPrefixes = [pageString, songString, musicAlbumString, videoString]; // 包含空格的完整前缀
     //   const _shortPrefixes = [pagePre, songPre, musicAlbumPre];        // 单个字符前缀
 
     // 1. 先检查是否完全匹配完整前缀
@@ -124,6 +128,11 @@ function formatSearchInput(val: string): {
             return {
                 formatVal: val.slice(musicAlbumPre.length),
                 preString: musicAlbumPre,
+            };
+        case videoPre:
+            return {
+                formatVal: val.slice(videoPre.length),
+                preString: videoPre,
             };
     }
 
@@ -168,6 +177,19 @@ function getAllPage(queryString: string): GlobalSearchCallBackType[] {
 }
 
 
+// 视频 搜索 模糊搜索
+function getVideo(queryString: string): GlobalSearchCallBackType[] {
+    if (!props.type || props.type == 'global' || props.type == 'video') {
+        return (videoStore.searchVideo(queryString) || []).map(_i => {
+            return {
+                value: videoString + (_i.title || _i.id),
+                video: _i
+            }
+        })
+    } else {
+        return []
+    }
+}
 
 // 歌曲 搜索 模糊搜索
 function getSong(queryString: string): GlobalSearchCallBackType[] {
@@ -217,21 +239,32 @@ const querySearch = (queryString: string, cb: any) => {
 
     const results: GlobalSearchCallBackType[] = []
 
-    let removeSearchData = new Map<'page' | 'song' | 'musicAlbum', GlobalSearchCallBackType[]>()
+    let removeSearchData = new Map<'page' | 'song' | 'musicAlbum' | 'video', GlobalSearchCallBackType[]>()
 
     let a = isRemove(queryString)
     if (a.remove) {
-        if (a.formatVal.includes('^')) {
+        if (a.formatVal == '') {
             removeSearchData.set('page', getAllPage(a.formatVal))
-        } else if (a.formatVal.includes('!')) {
-            removeSearchData.set('song', getSong(a.formatVal))
-        } else if (a.formatVal.includes('@')) {
             removeSearchData.set('musicAlbum', getMusicAlbum(a.formatVal))
+            removeSearchData.set('song', getSong(a.formatVal))
+            removeSearchData.set('video', getVideo(a.formatVal))
         } else {
-            removeSearchData.set('page', getAllPage(a.formatVal))
-            removeSearchData.set('musicAlbum', getMusicAlbum(a.formatVal))
-            removeSearchData.set('song', getSong(a.formatVal))
+            if (a.formatVal.includes(pagePre)) {
+                removeSearchData.set('page', getAllPage(a.formatVal))
+            } else if (a.formatVal.includes(songPre)) {
+                removeSearchData.set('song', getSong(a.formatVal))
+            } else if (a.formatVal.includes(musicAlbumPre)) {
+                removeSearchData.set('musicAlbum', getMusicAlbum(a.formatVal))
+            } else if (a.formatVal.includes(videoPre)) {
+                removeSearchData.set('video', getVideo(a.formatVal))
+            } else {
+                removeSearchData.set('page', getAllPage(a.formatVal))
+                removeSearchData.set('musicAlbum', getMusicAlbum(a.formatVal))
+                removeSearchData.set('song', getSong(a.formatVal))
+                removeSearchData.set('video', getVideo(a.formatVal))
+            }
         }
+
 
         for (const [, v] of removeSearchData.entries()) {
             results.push(...v.map(_i => {
@@ -246,16 +279,19 @@ const querySearch = (queryString: string, cb: any) => {
     const { formatVal, preString } = formatSearchInput(queryString)
 
     if (preString) {
-        if (preString.includes('^')) {
+        if (preString.includes(pagePre)) {
             results.push(...getPage(formatVal))
-        } else if (preString.includes('!')) {
+        } else if (preString.includes(songPre)) {
             results.push(...getSong(formatVal))
-        } else if (preString.includes('@')) {
+        } else if (preString.includes(musicAlbumPre)) {
             results.push(...getMusicAlbum(formatVal))
+        } else if (preString.includes(videoPre)) {
+            results.push(...getVideo(formatVal))
         }
     } else {
         results.push(...getPage(formatVal))
         results.push(...getSong(formatVal))
+        results.push(...getVideo(formatVal))
         results.push(...getMusicAlbum(formatVal))
     }
 
@@ -291,7 +327,7 @@ function handleSelect(item: GlobalSearchCallBackType) {
                     searchInput.value = ''
                     loading.value = false
                     config.defaultRouterSwitch('audio-play', false)
-                    ElMessage.success('删除页面成功')
+                    ElMessage.success('删除音频成功')
                 } else {
                     console.log(a.name, 'name')
                     if (!config.removeRoute(a.name as string)) {
@@ -319,6 +355,12 @@ function handleSelect(item: GlobalSearchCallBackType) {
             searchInput.value = ''
             loading.value = false;
             return
+        } else if (item.video) {
+            videoStore.deleteVideo(item.video.id)
+            ElMessage.success('删除视频成功')
+            searchInput.value = ''
+            loading.value = false;
+            return
         }
     }
 
@@ -332,12 +374,21 @@ function handleSelect(item: GlobalSearchCallBackType) {
         searchInput.value = ''
         audioStore.addAudioList(item.song)
         ElMessage.success('添加歌曲成功')
+        router.push('/audio-play')
     } else if (item.musicAlbum) {
         searchInput.value = ''
         router.push({
             path: '/music-album',
             query: {
                 id: item.musicAlbum.id,
+            }
+        })
+    } else if (item.video) {
+        searchInput.value = ''
+        router.push({
+            path: '/video',
+            query: {
+                id: item.video.id,
             }
         })
     }
@@ -358,12 +409,12 @@ function handleClick() {
 
     try {
         //default router
-        if (formatVal === 'setting') {
+        if (formatVal.trim().toLowerCase() === 'setting') {
             loading.value = false
             config.defaultRouterSwitch('setting')
             router.push('/setting')
             return;
-        } else if (formatVal === 'audio') {
+        } else if (formatVal.trim().toLowerCase() === 'audio') {
             loading.value = false
             config.defaultRouterSwitch('audio-play')
             router.push('/audio-play')
@@ -387,6 +438,18 @@ function handleClick() {
             config.defaultRouterSwitch('audio-play')
             router.push('/audio-play')
             return ElMessage.success('添加歌曲成功')
+        }
+        const v = videoStore.searchVideoClound(formatVal)
+        if (v) {
+            loading.value = false
+            searchInput.value = ''
+            router.push({
+                path: '/video',
+                query: {
+                    id: v.id,
+                }
+            })
+            return ElMessage.success('添加视频成功')
         }
 
         ElMessage.error('找不到数据')

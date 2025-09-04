@@ -4,12 +4,20 @@ import tailwindcss from "@tailwindcss/vite";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import { resolve } from "path";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+import { vite as vidstack } from "vidstack/plugins";
 import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/bible-talk/',   // 对应 GitHub Pages 的子路径
+  base: "/bible-talk/", // 对应 GitHub Pages 的子路径
   plugins: [
-    vue(),
+    vidstack(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith("media-"),
+        },
+      },
+    }),
     vueJsx(),
     tailwindcss(),
     createSvgIconsPlugin({

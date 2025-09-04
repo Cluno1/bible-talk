@@ -21,19 +21,19 @@ export const helpDoc: BibleTalkDataType = {
       icon: "CollectionTag",
       englishName: "introduction",
       content: [
-        { paragraphs: "网站有两个主题:一个是**搜索**" },
+        { paragraphs: "网站有两个主题:一个是**搜索**,一个是**隐私**" },
         {
           paragraphs:
-            "是的,你没有听错,搜索对应的ID,然后回车,你可以到达网站的任何一个角落,只要你懂得怎么搜索",
+            "搜索对应的ID,然后回车,你可以到达网站的任何一个角落,只要你懂得怎么搜索",
         },
         {
           paragraphs:
-            "另外一个是**隐私**,你只能搜索到你已知的ID,这个ID可能是写该文章的作者发给你的一串唯一字符,也可能是某首歌曲作者发给你的唯一标识",
+            "**隐私**,你只能搜索到你已知的ID,这个ID可能是写该文章的作者发给你的一串唯一字符,也可能是某首歌曲作者发给你的唯一标识",
         },
         { paragraphs: "但不管怎么样,前提是你已经知道该ID" },
         {
           paragraphs:
-            "如果你点击搜索条你大致会看到**三种提示标志**(如果你有的话):**'^page'**, **'!song'**, **'@album'**",
+            "如果你点击搜索条你大致会看到**这几种提示标志**(如果你有的话):**'^page'**, **'!song'**, **'@album'**,**'%video'**",
         },
         {
           paragraphs: " ",
@@ -76,6 +76,10 @@ export const helpDoc: BibleTalkDataType = {
         },
         {
           paragraphs:
+            "如果你搜索'old-man-sea',它会将ヨルシカ的<<老人と海>>加入到你的播放器,你就可以欣赏该歌曲了",
+        },
+        {
+          paragraphs:
             "当然,输入'rm 方的言',<<方的言>>会彻底从你的播放列表,搜索提示里面消失",
         },
         { paragraphs: "如果它属于某一张专辑里面,也会在专辑里面删除" },
@@ -101,6 +105,28 @@ export const helpDoc: BibleTalkDataType = {
         {
           paragraphs:
             "如果你希望快速找到某张专辑,那么搜索'@'+对应的专辑名称或专辑唯一ID是个很好的途径,'@'意味着你只搜索专辑",
+        },
+        {
+          paragraphs: " ",
+        },
+        {
+          paragraphs:
+            "**'%video'**,这个标志的提示意味着他是一条视频,点击后会把该视频加入你的本地,并自动跳转到视频播放器）",
+        },
+        {
+          paragraphs:
+            "如果你搜索'守候',它会将赵英俊的《守候》的Live视频 加入到你的播放器,你就可以直接观看了",
+        },
+        {
+          paragraphs:
+            "如果你搜索'videodemo',它会将blender开源动画视频的《Sprite Fright》视频 加入到你的播放器.",
+        },
+        {
+          paragraphs: "输入'rm 守候',该视频会从你的播放器里消失",
+        },
+        {
+          paragraphs:
+            "如果你希望**只搜视频**,用'%'+视频名称或唯一 ID 即可,例如'%Sprite Fright'",
         },
       ],
     },

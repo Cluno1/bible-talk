@@ -8,6 +8,7 @@ import Bible from "@/view/Bible.vue";
 import MusicAlbum from "@/view/music/MusicAlbum.vue";
 import Audio from "@/view/music/index.vue";
 import Setting from "@/view/Setting.vue";
+import Video from "@/view/video/index.vue";
 const routes: RouteRecordRaw[] = [
   {
     path: "/home",
@@ -20,7 +21,7 @@ const routes: RouteRecordRaw[] = [
     path: "/setting",
     name: "setting",
     component: Setting,
-    meta: { title: "Setting", icon: "Setting", rank: 3 ,hidden:true},
+    meta: { title: "Setting", icon: "Setting", rank: 3, hidden: true },
   },
   {
     path: "/music-album",
@@ -40,6 +41,12 @@ const routes: RouteRecordRaw[] = [
     meta: { title: "Audio Play", icon: "Headset", rank: 3, hidden: true },
   },
   {
+    path: "/video",
+    name: "video",
+    component: Video,
+    meta: { title: "Video Play", icon: "Headset", rank: 3, hidden: false },
+  },
+  {
     path: "/bible",
     name: "bible",
     component: Bible,
@@ -48,7 +55,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/bible-talk/'),
   routes,
 });
 
