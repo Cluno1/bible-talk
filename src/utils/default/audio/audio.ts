@@ -1,5 +1,5 @@
 import type { MusicType } from "@/type/music";
-import { ihopeAlbum } from "../album/ihope";
+import { localMusicAlbums } from "../album";
 
 export const musicdemo_1: MusicType = {
   id: 'old-man-sea',
@@ -23,5 +23,9 @@ export const musicdemo_2: MusicType = {
   lyricsLink:'https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/global-learn/%E6%96%B9%E7%9A%84%E8%A8%80-%E8%B5%B5%E8%8B%B1%E4%BF%8A-%E6%AD%8C%E8%AF%8D.lrc'
 };
 
+let ms:MusicType[]=[]
+localMusicAlbums.forEach(i=>{
+  i.musics.forEach(_i=>ms.push(_i))
+})
 
-export const localAudios:MusicType[]=[musicdemo_1,musicdemo_2,...ihopeAlbum.musics]//包括了预设的音乐和 本地专辑的音乐
+export const localAudios: MusicType[] = [musicdemo_1, musicdemo_2, ...ms];     //包括了预设的音乐和 本地专辑的音乐

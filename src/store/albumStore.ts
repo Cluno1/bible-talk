@@ -2,9 +2,9 @@ import type { MusicAlbum, MusicType } from "@/type/music";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import Fuse from "fuse.js";
-import { ihopeAlbum } from "@/utils/default/album/ihope";
 import { useAudioConfigStore } from "./audioStore";
 import { localAudios } from "@/utils/default/audio/audio";
+import { localMusicAlbums } from "@/utils/default/album";
 
 export const useAlbumConfigStore = defineStore("albumConfig", () => {
   const audioConfig = useAudioConfigStore();
@@ -81,9 +81,11 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
       return _a;
     } else {
       //这里搜索本地
-      if (id == ihopeAlbum.id) {
-        addAlbum(ihopeAlbum);
-        return ihopeAlbum;
+      const a=localMusicAlbums.find(i=>i.id===id)
+
+      if (a) {
+        addAlbum(a);
+        return a;
       }
 
       //联网搜索,搜索线上的album;
