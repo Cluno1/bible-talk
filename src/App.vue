@@ -22,7 +22,7 @@ const configStore = useConfigStore()
           <Menu />
         </el-aside>
         <!-- main -->
-        <el-main>
+        <el-main class="min-h-[79vh]">
           <div class="main w-full overflow-auto pb-3 mb-3" :style="{ 'max-height': '97vh' }">
             <router-view />
           </div>
@@ -56,18 +56,17 @@ const configStore = useConfigStore()
 </template>
 
 <style scoped>
-
 .main::-webkit-scrollbar {
-    width: 5px;
+  width: 5px;
 }
 
 .main::-webkit-scrollbar-track {
-    background: transparent;
-}
-/* rgba(116, 108, 108, 0.808) */
-.main::-webkit-scrollbar-thumb {
-    background: transparent;
-    border-radius: 5px;
+  background: transparent;
 }
 
+/* rgba(116, 108, 108, 0.808) */
+.main::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 5px;
+}
 </style>

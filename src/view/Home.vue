@@ -41,6 +41,7 @@
                 </h1>
             </div>
         </div>
+        <div class="absolute right-0 bottom-0 ">{{ '粤ICP备2025467657号' }}</div>
 
     </div>
 </template>
@@ -78,7 +79,7 @@ function handleShowHelp() {
             ElMessage.error('没有help页面??')
         }
     } catch (e) {
-        
+
         ElMessage.success('成功跳转')
         router.push('/help')
     }
