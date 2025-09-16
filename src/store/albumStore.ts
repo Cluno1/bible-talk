@@ -5,9 +5,12 @@ import Fuse from "fuse.js";
 import { useAudioConfigStore } from "./audioStore";
 import { localAudios } from "@/utils/default/audio/audio";
 import { localMusicAlbums } from "@/utils/default/album";
+import { useVideoStore } from "./videoStore";
 
 export const useAlbumConfigStore = defineStore("albumConfig", () => {
   const audioConfig = useAudioConfigStore();
+  const viderStore = useVideoStore();
+
   /* ===================== 状态 ===================== */
   // 专辑映射  id -> MusicAlbum
   const albumsVersion = ref(0);
@@ -39,15 +42,16 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
 
   /* ===================== 专辑相关 ===================== */
 
-  /** 新增/覆盖整张专辑（包含其歌曲列表） */
+  /** 新增/覆盖整张专辑（包含其歌曲列表,视频） */
   function addAlbum(album: MusicAlbum) {
     albums.set(album.id, album);
     addMusic(album.musics); // 把专辑里的所有单曲也存进 musics 表 方便搜索
+    viderStore.addVideo(album?.videos || []); //video 表
     albumsVersion.value++;
   }
 
   /**
-   * 删除整张专辑（包括里面包含的歌曲）
+   * 删除整张专辑（包括里面包含的歌曲 视频）
    * @param id 专辑id
    * @returns
    */
@@ -58,6 +62,10 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
 
     album.musics?.forEach((music) => {
       musics.delete(music.id);
+    });
+
+    album.videos?.forEach((v) => {
+      viderStore.deleteVideo(v);
     });
 
     albums.delete(id);
@@ -81,7 +89,7 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
       return _a;
     } else {
       //这里搜索本地
-      const a=localMusicAlbums.find(i=>i.id===id)
+      const a = localMusicAlbums.find((i) => i.id === id);
 
       if (a) {
         addAlbum(a);
@@ -123,7 +131,7 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
     musicsVersion.value++;
   }
 
-  /** 删除单曲  也从对应专辑里面删除 TODO */
+  /** 删除单曲  也从对应专辑里面删除  */
   function clearMusic(id: string) {
     //music Id
     const music = musics.get(id);

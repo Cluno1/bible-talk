@@ -9,6 +9,7 @@ import MusicAlbum from "@/view/music/MusicAlbum.vue";
 import Audio from "@/view/music/index.vue";
 import Setting from "@/view/Setting.vue";
 import Video from "@/view/video/index.vue";
+import FontTest from "@/view/test/FontTest.vue";
 const routes: RouteRecordRaw[] = [
   {
     path: "/home",
@@ -51,6 +52,13 @@ const routes: RouteRecordRaw[] = [
     name: "bible",
     component: Bible,
     meta: { title: "Bible", icon: "Reading", rank: 2, hidden: true }, // 不显示
+  },
+  
+  {
+    path: "/test",
+    name: "test",
+    component: FontTest,
+    meta: { title: "Test", icon: "Reading", rank: 2, hidden: false }, // 不显示
   },
 ];
 

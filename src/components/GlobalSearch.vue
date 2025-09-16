@@ -356,7 +356,7 @@ function handleSelect(item: GlobalSearchCallBackType) {
             loading.value = false;
             return
         } else if (item.video) {
-            videoStore.deleteVideo(item.video.id)
+            videoStore.deleteVideo(item.video)
             ElMessage.success('删除视频成功')
             searchInput.value = ''
             loading.value = false;

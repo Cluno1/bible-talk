@@ -1,5 +1,6 @@
 import type { VideoType } from "@/type/video";
 import type { TextTrackInit } from "vidstack";
+import { localMusicAlbums } from "../album";
 
 const textTracks: TextTrackInit[] = [
   // Subtitles
@@ -50,5 +51,12 @@ export const videoDemo2: VideoType = {
     "https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/video/%E5%AE%88%E5%80%99%20-%20%E8%B5%B5%E8%8B%B1%E4%BF%8A%20live.mp4",
 };
 
+const localVideos = [videoDemo, videoDemo2];
 
-export const localVideos=[videoDemo,videoDemo2]
+localMusicAlbums.forEach((i) => {
+  (i?.videos || []).forEach((i) => localVideos.push(i));
+});
+
+export  {
+  localVideos
+}

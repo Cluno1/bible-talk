@@ -1,3 +1,5 @@
+import type { VideoType } from "./video";
+
 export type MusicType = {
   id: string;
   link: string;
@@ -19,4 +21,5 @@ export type MusicAlbum = {
   pic?: string[];
   meta?: any;
   musics: MusicType[];
+  videos?:VideoType[];
 };
