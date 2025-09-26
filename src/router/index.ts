@@ -9,7 +9,9 @@ import MusicAlbum from "@/view/music/MusicAlbum.vue";
 import Audio from "@/view/music/index.vue";
 import Setting from "@/view/Setting.vue";
 import Video from "@/view/video/index.vue";
-import FontTest from "@/view/test/FontTest.vue";
+import Error from "@/view/Error.vue";
+import Search from "@/view/video/Search.vue";
+import RouterView from "@/view/video/RouterView.vue";
 const routes: RouteRecordRaw[] = [
   {
     path: "/home",
@@ -44,7 +46,21 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/video",
     name: "video",
-    component: Video,
+    component: RouterView,
+    children: [
+      {
+        path: "",
+        name: "video-index",
+        component: Video,
+        meta: { title: "video show", icon: "Reading", rank: 1, hidden: true }, // 不显示
+      },
+      {
+        path: "search",
+        name: "video-search",
+        component: Search,
+        meta: { title: "video search", icon: "Reading", rank: 2, hidden: true }, // 不显示
+      },
+    ],
     meta: { title: "Video Play", icon: "Headset", rank: 3, hidden: true },
   },
   {
@@ -53,17 +69,23 @@ const routes: RouteRecordRaw[] = [
     component: Bible,
     meta: { title: "Bible", icon: "Reading", rank: 2, hidden: true }, // 不显示
   },
-  
   {
-    path: "/test",
-    name: "test",
-    component: FontTest,
-    meta: { title: "Test", icon: "Reading", rank: 2, hidden: false }, // 不显示
+    path: "/error",
+    name: "error",
+    component: Error,
+    meta: { title: "error", icon: "Reading", rank: 2, hidden: true }, // 不显示
   },
+
+  // {
+  //   path: "/yhdmtest",
+  //   name: "yhdm-test",
+  //   component: YHDMTest,
+  //   meta: { title: "YHDM Test", icon: "Reading", rank: 2, hidden: true },
+  // },
 ];
 
 const router = createRouter({
-  history: createWebHistory('/bible-talk/'),
+  history: createWebHistory("/bible-talk/"),
   routes,
 });
 

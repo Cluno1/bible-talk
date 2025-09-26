@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+ 
+  <body>
+    <div class="homepage">
+    
+
+<script src="/static/js/common032.js"></script>
+  <div class="main">
+    <div style="margin-top: 10px;">
+    </div>
+    <div style="margin-bottom: 10px;">
+    </div>
+    <div class="content">
+      <div class="module module-player">
+        <div class="module-main">
+          <div class="player-box">
+            <div class="player-box-main">
+              <div class="MacPlayer">
+                <div id="playleft">
+		<script type='text/javascript'>
+			var Iyplayer = {id:12224580,videoID:850506,name:'第01集',sort:1,file:'',chargingMode:1,currency:0,status:1,subTitle:'第01集',tag:'bfzym3u8'}
+		</script>
+<div id="tem_vod_box">
+    <link rel="stylesheet" href="/iyplayer/default/css/aliplayer.css" />
+    <link rel="stylesheet" href="/iyplayer/default/css/play_comm.css">
+    <script charset="utf-8" type="text/javascript" src="/iyplayer/default/js/aliplayer.js"></script>
+    <script charset="utf-8" type="text/javascript" src="/iyplayer/default/js/aliplayer-components.js"></script>
+    <script src="/iyads/js/axios.js"></script>
+    <script src="/iyads/js/http.js"></script>
+    <script>
+        var adTime = 0;
+        var player = null;
+        var vodLongTime = 0;
+        var noTarLongTime = 0;
+        var vodCurrent = 0;
+        var lineId = Number('12224580');
+        var vodId = Number('850506')
+        var chargingMode = '1'
+        var temUserIsLogin = false;
+        var temUserObj = {
+            Group: 1,
+            GoldTag: 2,
+        };
+        var temAliAutoVod = true;
+        var toMemberHref = '\/memberUser';
+        var temNextVod = '12261258';
+        var temLineList = [{"BarrageConfig":{"NeedLogin":0,"Open":0},"BrowseInfo":{},"Code":"","IsJsonParse":false,"LineList":[],"ParseAddress":"","PlayerConfig":{},"chargingMode":1,"currency":0,"file":"j6zaHR0cHM6JTJGJTJGOC5iZjhiZi5jb20lMkZ2aWRlbyUyRmZlaXl1YW56aGFuZ3VpJTJGJUU3JUFDJUFDMDElRTklOUIlODYlMkZpbmRleC5tM3U4","id":12224580,"jsonPlayAddress":"","name":"第01集","nextLineId":0,"parseMode":0,"renderCode":"","sort":0,"status":1,"subTitle":"第01集","tag":"bfzym3u8","videoID":850506,"videoLineId":1416134},{"BarrageConfig":{"NeedLogin":0,"Open":0},"BrowseInfo":{},"Code":"","IsJsonParse":false,"LineList":[],"ParseAddress":"","PlayerConfig":{},"chargingMode":1,"currency":0,"file":"Ky6aHR0cHM6JTJGJTJGOC5iZjhiZi5jb20lMkZ2aWRlbyUyRmZlaXl1YW56aGFuZ3VpJTJGJUU3JUFDJUFDMDIlRTklOUIlODYlMkZpbmRleC5tM3U4","id":12350217,"jsonPlayAddress":"","name":"第02集","nextLineId":0,"parseMode":0,"renderCode":"","sort":1,"status":1,"subTitle":"第02集","tag":"bfzym3u8","videoID":850506,"videoLineId":1416134},{"BarrageConfig":{"NeedLogin":0,"Open":0},"BrowseInfo":{},"Code":"","IsJsonParse":false,"LineList":[],"ParseAddress":"","PlayerConfig":{},"chargingMode":1,"currency":0,"file":"ppAaHR0cHM6JTJGJTJGOC5iZjhiZi5jb20lMkZ2aWRlbyUyRmZlaXl1YW56aGFuZ3VpJTJGJUU3JUFDJUFDMDMlRTklOUIlODYlMkZpbmRleC5tM3U4","id":12261258,"jsonPlayAddress":"","name":"第03集","nextLineId":0,"parseMode":0,"renderCode":"","sort":2,"status":1,"subTitle":"第03集","tag":"bfzym3u8","videoID":850506,"videoLineId":1416134},{"BarrageConfig":{"NeedLogin":0,"Open":0},"BrowseInfo":{},"Code":"","IsJsonParse":false,"LineList":[],"ParseAddress":"","PlayerConfig":{},"chargingMode":1,"currency":0,"file":"hZsaHR0cHM6JTJGJTJGOC5iZjhiZi5jb20lMkZ2aWRlbyUyRmZlaXl1YW56aGFuZ3VpJTJGJUU3JUFDJUFDMDQlRTklOUIlODYlMkZpbmRleC5tM3U4","id":12303531,"jsonPlayAddress":"","name":"第04集","nextLineId":0,"parseMode":0,"renderCode":"","sort":3,"status":1,"subTitle":"第04集","tag":"bfzym3u8","videoID":850506,"videoLineId":1416134},{"BarrageConfig":{"NeedLogin":0,"Open":0},"BrowseInfo":{},"Code":"","IsJsonParse":false,"LineList":[],"ParseAddress":"","PlayerConfig":{},"chargingMode":1,"currency":0,"file":"qhpaHR0cHM6JTJGJTJGOC5iZjhiZi5jb20lMkZ2aWRlbyUyRmZlaXl1YW56aGFuZ3VpJTJGJUU3JUFDJUFDMDUlRTklOUIlODYlMkZpbmRleC5tM3U4","id":12111397,"jsonPlayAddress":"","name":"第05集","nextLineId":0,"parseMode":0,"renderCode":"","sort":4,"status":1,"subTitle":"第05集","tag":"bfzym3u8","videoID":850506,"videoLineId":1416134},{"BarrageConfig":{"NeedLogin":0,"Open":0},"BrowseInfo":{},"Code":"","IsJsonParse":false,"LineList":[],"ParseAddress":"","PlayerConfig":{},"chargingMode":1,"currency":0,"file":"jrxaHR0cHM6JTJGJTJGOC5iZjhiZi5jb20lMkZ2aWRlbyUyRmZlaXl1YW56aGFuZ3VpJTJGJUU3JUFDJUFDMDYlRTklOUIlODYlMkZpbmRleC5tM3U4","id":11961465,"jsonPlayAddress":"","name":"第06集","nextLineId":0,"parseMode":0,"renderCode":"","sort":5,"status":1,"subTitle":"第06集","tag":"bfzym3u8","videoID":850506,"videoLineId":1416134},{"BarrageConfig":{"NeedLogin":0,"Open":0},"BrowseInfo":{},"Code":"","IsJsonParse":false,"LineList":[],"ParseAddress":"","PlayerConfig":{},"chargingMode":1,"currency":0,"file":"U4paHR0cHM6JTJGJTJGOC5iZjhiZi5jb20lMkZ2aWRlbyUyRmZlaXl1YW56aGFuZ3VpJTJGJUU3JUFDJUFDMDclRTklOUIlODYlMkZpbmRleC5tM3U4","id":11994404,"jsonPlayAddress":"","name":"第07集","nextLineId":0,"parseMode":0,"renderCode":"","sort":6,"status":1,"subTitle":"第07集","tag":"bfzym3u8","videoID":850506,"videoLineId":1416134},{"BarrageConfig":{"NeedLogin":0,"Open":0},"BrowseInfo":{},"Code":"","IsJsonParse":false,"LineList":[],"ParseAddress":"","PlayerConfig":{},"chargingMode":1,"currency":0,"file":"j5haHR0cHM6JTJGJTJGOC5iZjhiZi5jb20lMkZ2aWRlbyUyRmZlaXl1YW56aGFuZ3VpJTJGJUU3JUFDJUFDMDglRTklOUIlODYlMkZpbmRleC5tM3U4","id":12535445,"jsonPlayAddress":"","name":"第08集","nextLineId":0,"parseMode":0,"renderCode":"","sort":7,"status":1,"subTitle":"第08集","tag":"bfzym3u8","videoID":850506,"videoLineId":1416134},{"BarrageConfig":{"NeedLogin":0,"Open":0},"BrowseInfo":{},"Code":"","IsJsonParse":false,"LineList":[],"ParseAddress":"","PlayerConfig":{},"chargingMode":1,"currency":0,"file":"X6faHR0cHM6JTJGJTJGOC5iZjhiZi5jb20lMkZ2aWRlbyUyRmZlaXl1YW56aGFuZ3VpJTJGJUU3JUFDJUFDMDklRTklOUIlODYlMkZpbmRleC5tM3U4","id":12179905,"jsonPlayAddress":"","name":"第09集","nextLineId":0,"parseMode":0,"renderCode":"","sort":8,"status":1,"subTitle":"第09集","tag":"bfzym3u8","videoID":850506,"videoLineId":1416134},{"BarrageConfig":{"NeedLogin":0,"Open":0},"BrowseInfo":{},"Code":"","IsJsonParse":false,"LineList":[],"ParseAddress":"","PlayerConfig":{},"chargingMode":1,"currency":0,"file":"HKfaHR0cHM6JTJGJTJGOC5iZjhiZi5jb20lMkZ2aWRlbyUyRmZlaXl1YW56aGFuZ3VpJTJGJUU3JUFDJUFDMTAlRTklOUIlODYlMkZpbmRleC5tM3U4","id":12245822,"jsonPlayAddress":"","name":"第10集","nextLineId":0,"parseMode":0,"renderCode":"","sort":9,"status":1,"subTitle":"第10集","tag":"bfzym3u8","videoID":850506,"videoLineId":1416134}];
+        var temMemSysStatus =  false ;
+        var temCurVodFile = "";
+        var temTryAndSee = {"id":0,"open":false,"type":1,"episodes":0,"duration":0,"second":0,"siteId":9,"ext":"","createAt":0,"updateAt":0};
+        var temIsJsonPa =  false ;
+        var temJsonPlayAddr = "";
+        var temJsonVodPath = "";
+        var temPlayRenderCode = "\u003ciframe height=100% width=100% src='https://dxfbk.com/?url=https://8.bf8bf.com/video/feiyuanzhangui/第01集/index.m3u8' title='第01集' frameborder=0 allowfullscreen=true\u003e\u003c/iframe\u003e";
+        var temPlayParseMode =  1 ;
+        var temAlipVodIsFull = false;
+        var temViewPortIsPc = $(window).width() > 599;
+        var temVodPlayerConfig = {"app":{"BackgroundImg":"","Headers":[],"Loading":"","Logo":"","LogoPos":1,"Type":"app"},"h5":{"BackgroundImg":"","Headers":[],"Loading":"","Logo":"","LogoPos":1,"Type":"h5"},"web":{"BackgroundImg":"","Headers":[],"Loading":"","Logo":"","LogoPos":1,"Type":"web"}};
+        var temLiveSource = 0;
+        var temBrowseInfo = {"duration":0,"progress":0};
+        var temVideoAdClose = function (manyVideoAd) {
+            let result = false;
+            if (!temMemSysStatus) {
+                if (temUserIsLogin) {
+                    if (temUserObj.Group == 2) {
+                        result = true;
+                    } else {
+                        layer.msg('非vip无法跳过视频', { icon: 7, offset: '50px', time: 1000 });
+                    }
+                } else {
+                    layer.msg('请先登录', { icon: 7, offset: '50px', time: 1000 });
+                }
+                if (result) {
+                    manyVideoAd.closeManyVideoAd()
+                } else {
+                }
+            } else {
+                manyVideoAd.closeManyVideoAd()
+            }
+        };
+        temLineList.forEach(item => {
+            const file = item.file.substring(3)
+            const file2 = atob(file);
+            item.source = decodeURIComponent(file2)
+        })
+        var temAlipComponents = [];
+        if (!temIsJsonPa) {
+            temAlipComponents.push({
+                name: 'PlaylistComponent',
+                type: AliPlayerComponent.PlaylistComponent,
+                args: [temLineList]
+            })
+        }
+        var temAlipComAdOpt = {
+            startAd: {
+                target: '_self',
+                close: '2',
+            },
+            puseAd: {
+                target: '_self',
+                close: '1',
+            },
+        }
+        var temRefreshTemDom = undefined;
+        var temCurDanmuComp = null;
+        var temDanmuTimer = null;
+        var temDanmuInterval = 60;
+        var temBarrage = {"NeedLogin":0,"Open":0};
+    </script>
+    <div class="aliplayer-box">
+            <a href="/p/850506/153/12224580" class="tem_item_eps" style="display: none;">
+            </a>
+            <a href="/p/850506/153/12350217" class="tem_item_eps" style="display: none;">
+            </a>
+            <a href="/p/850506/153/12261258" class="tem_item_eps" style="display: none;">
+            </a>
+            <a href="/p/850506/153/12303531" class="tem_item_eps" style="display: none;">
+            </a>
+            <a href="/p/850506/153/12111397" class="tem_item_eps" style="display: none;">
+            </a>
+            <a href="/p/850506/153/11961465" class="tem_item_eps" style="display: none;">
+            </a>
+            <a href="/p/850506/153/11994404" class="tem_item_eps" style="display: none;">
+            </a>
+            <a href="/p/850506/153/12535445" class="tem_item_eps" style="display: none;">
+            </a>
+            <a href="/p/850506/153/12179905" class="tem_item_eps" style="display: none;">
+            </a>
+            <a href="/p/850506/153/12245822" class="tem_item_eps" style="display: none;">
+            </a>
+        <div class="aliplayer" style="position: relative;">
+                <script>
+                    temUserObj.Group = '0';
+                    temUserObj.GoldTag = '0'
+                </script>
+            <div id="cms_no_shop" style="z-index: 97; display: none;">
+                        <p class="cms_no_shop_other_title"></p>
+            </div>
+            <div class="cms_tem_mask"></div>
+            <div class="cms_tem_pop">
+                <div class="cms_tem_pop_box">
+                    <div class="cms_tem_pop_top">
+                        <p>确认</p><img onclick="$('.cms_tem_mask').hide();$('.cms_tem_pop').hide()"
+                            style="width: 16px; height: 16px;cursor: pointer;"
+                            src="/iyplayer/default/images/aliplay/closeba.svg" alt="">
+                    </div>
+                    <div class="cms_tem_pop_cont">
+                        <p>购买本片需要支付<span style="color: #FF8E61;">0金币</span>,确定要购买吗？</p>
+                    </div>
+                    <div class="cms_tem_pop_bot">
+                        <p class="cms_clo" onclick="$('.cms_tem_mask').hide();$('.cms_tem_pop').hide()">取消</p>
+                        <p class="cms_sub" onclick="sureShopVod()">确定</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tem_no_playfile"></div>
+            <div class="unVideo" id="J_prismPlayer" style="z-index:1"></div>
+            <div style="width: 100%;height: 100%;display: none;" id="custom_player_box"></div>
+            <a href="/p/850506/153/12261258" id="tem_next_vod">
+            </a>
+        </div>
+        <script src="/iyplayer/default/js/player.js"></script>
+    </div>
+</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 10px;">
+          </div>
+          <div class="module-player-side ">
+            <div class="module-player-info">
+              <div class="module-info-heading">
+                <h1 id="title_name">
+                  <div title="废渊战鬼"
+                    >废渊战鬼</div
+                  >
+                </h1>
+                <div class="module-info-tag">
+                    <div class="module-info-tag-link">
+                      <div title="日本" >日本</div>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="player-list tem_ref_dom">
+              <div class="module-heading player-heading " id="h5_selectLine">
+                <div style="height: 30px;width: 100px;">
+                    <h2
+                      class="module-title player-title"
+                      style="
+                        font-size: 15px;
+                        margin-top: 17px;
+                      "
+                    >
+                      <span>选集播放</span><span onclick="reverse_f()"><img style="height: 15px;" src="/static/image/paixu.png" alt=""></span>
+                    </h2>
+                </div>
+                <div class="module-tab player-tab">
+                  <label class="module-tab-name" style="margin-top: 15px;"><span class="module-tab-value" id="player-first-name"></span><i class="icon-arrow"></i></label>
+                  <div
+                    class="module-tab-items tab swiper-initialized swiper-horizontal swiper-pointer-events swiper-free-mode "
+                  >
+                  <div class="module-tab-title">
+                    选择播放源<span class="close-drop"
+                      ><i class="icon-close"></i
+                    ></span>
+                  </div>
+                    <div
+                      class="swiper swiper-initialized swiper-horizontal swiper-pointer-events module-tab-items tab swiper-initialized "
+                      id="playSwiper"
+                    >
+                      <div class="swiper-wrapper ">
+                            <div
+                                class="swiper-slide module-tab-item tab-item"
+                                id="lineBtn0"
+                                >加速云</div
+                              >
+                            <div
+                                class="swiper-slide module-tab-item tab-item"
+                                id="lineBtn1"
+                                >高清云</div
+                              >
+                            <div
+                                class="swiper-slide module-tab-item tab-item"
+                                id="lineBtn2"
+                                >免费云</div
+                              >
+                            <div
+                                class="swiper-slide module-tab-item tab-item"
+                                id="lineBtn3"
+                                >火箭云</div
+                              >
+                      </div>
+                    </div>
+                    <div  id="player-List" style="display: flex;flex-wrap: wrap;overflow-x: auto;">
+                        <div
+                            class="swiper-slide module-tab-item tab-item"
+                            id="lineBtn_h50"
+                            style="width: 98%;"
+                            ><span>加速云</span><small>11</small></div
+                          >
+                        <div
+                            class="swiper-slide module-tab-item tab-item"
+                            id="lineBtn_h51"
+                            style="width: 98%;"
+                            ><span>高清云</span><small>11</small></div
+                          >
+                        <div
+                            class="swiper-slide module-tab-item tab-item"
+                            id="lineBtn_h52"
+                            style="width: 98%;"
+                            ><span>免费云</span><small>11</small></div
+                          >
+                        <div
+                            class="swiper-slide module-tab-item tab-item"
+                            id="lineBtn_h53"
+                            style="width: 98%;"
+                            ><span>火箭云</span><small>11</small></div
+                          >
+                    </div>
+                  </div>
+                </div>
+                <div class="shortcuts-mobile-overlay"></div>
+              </div>
+              <style>
+                @media(min-width: 559px){
+                  #player-List{
+                    display: none !important;
+                  }
+                }
+                @media(max-width: 559px){
+                #h5_selectLine{
+                    display: flex !important;
+                    justify-content: space-between !important;
+                  }
+                }
+              </style>
+              <div class="tem_ref_dom">
+                    <div
+                      class="module-list sort-list tab-list play-tab-list "
+                      id="panel2"
+                      data-index="0"
+                    ><video style="display: none;">加速云</video>
+                      <div class="module-play-list ">
+                        <div
+                          class="module-play-list-content module-play-list-base"
+                        >
+                              <script>
+                                $(document).ready(function () {
+                                  setVisitLocation({
+                                    "name": "废渊战鬼",
+                                    "tag": "第01集",
+                                    "url": location.pathname + location.search,
+                                    'imgUrl': 'https:\/\/viptulz.com\/upload\/vod\/20250706-1\/799e5e230782ff7d47b0ab2e6554efc6.jpg'
+                                  })
+                                })
+                              </script>
+                            <a href="/p/850506/153/12224580" class="module-play-list-link childVodId12224580">
+                              <span>第01集</span>
+                            </a>
+                            <a href="/p/850506/153/12350217" class="module-play-list-link childVodId12350217">
+                              <span>第02集</span>
+                            </a>
+                            <a href="/p/850506/153/12261258" class="module-play-list-link childVodId12261258">
+                              <span>第03集</span>
+                            </a>
+                            <a href="/p/850506/153/12303531" class="module-play-list-link childVodId12303531">
+                              <span>第04集</span>
+                            </a>
+                            <a href="/p/850506/153/12111397" class="module-play-list-link childVodId12111397">
+                              <span>第05集</span>
+                            </a>
+                            <a href="/p/850506/153/11961465" class="module-play-list-link childVodId11961465">
+                              <span>第06集</span>
+                            </a>
+                            <a href="/p/850506/153/11994404" class="module-play-list-link childVodId11994404">
+                              <span>第07集</span>
+                            </a>
+                            <a href="/p/850506/153/12535445" class="module-play-list-link childVodId12535445">
+                              <span>第08集</span>
+                            </a>
+                            <a href="/p/850506/153/12179905" class="module-play-list-link childVodId12179905">
+                              <span>第09集</span>
+                            </a>
+                            <a href="/p/850506/153/12245822" class="module-play-list-link childVodId12245822">
+                              <span>第10集</span>
+                            </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="module-list sort-list tab-list play-tab-list "
+                      id="panel2"
+                      data-index="1"
+                    ><video style="display: none;">高清云</video>
+                      <div class="module-play-list ">
+                        <div
+                          class="module-play-list-content module-play-list-base"
+                        >
+                            <a href="/p/850506/153/12261285" class="module-play-list-link childVodId12261285">
+                              <span>第01集</span>
+                            </a>
+                            <a href="/p/850506/153/12690562" class="module-play-list-link childVodId12690562">
+                              <span>第02集</span>
+                            </a>
+                            <a href="/p/850506/153/12245912" class="module-play-list-link childVodId12245912">
+                              <span>第03集</span>
+                            </a>
+                            <a href="/p/850506/153/12180165" class="module-play-list-link childVodId12180165">
+                              <span>第04集</span>
+                            </a>
+                            <a href="/p/850506/153/12303373" class="module-play-list-link childVodId12303373">
+                              <span>第05集</span>
+                            </a>
+                            <a href="/p/850506/153/11994426" class="module-play-list-link childVodId11994426">
+                              <span>第06集</span>
+                            </a>
+                            <a href="/p/850506/153/12111345" class="module-play-list-link childVodId12111345">
+                              <span>第07集</span>
+                            </a>
+                            <a href="/p/850506/153/11961339" class="module-play-list-link childVodId11961339">
+                              <span>第08集</span>
+                            </a>
+                            <a href="/p/850506/153/12224380" class="module-play-list-link childVodId12224380">
+                              <span>第09集</span>
+                            </a>
+                            <a href="/p/850506/153/12354423" class="module-play-list-link childVodId12354423">
+                              <span>第10集</span>
+                            </a>
+                            <a href="/p/850506/153/12535495" class="module-play-list-link childVodId12535495">
+                              <span>第11集</span>
+                            </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="module-list sort-list tab-list play-tab-list "
+                      id="panel2"
+                      data-index="2"
+                    ><video style="display: none;">免费云</video>
+                      <div class="module-play-list ">
+                        <div
+                          class="module-play-list-content module-play-list-base"
+                        >
+                            <a href="/p/850506/153/12112759" class="module-play-list-link childVodId12112759">
+                              <span>第01集</span>
+                            </a>
+                            <a href="/p/850506/153/12245874" class="module-play-list-link childVodId12245874">
+                              <span>第02集</span>
+                            </a>
+                            <a href="/p/850506/153/12261164" class="module-play-list-link childVodId12261164">
+                              <span>第03集</span>
+                            </a>
+                            <a href="/p/850506/153/12690501" class="module-play-list-link childVodId12690501">
+                              <span>第04集</span>
+                            </a>
+                            <a href="/p/850506/153/12303840" class="module-play-list-link childVodId12303840">
+                              <span>第05集</span>
+                            </a>
+                            <a href="/p/850506/153/11961402" class="module-play-list-link childVodId11961402">
+                              <span>第06集</span>
+                            </a>
+                            <a href="/p/850506/153/12345465" class="module-play-list-link childVodId12345465">
+                              <span>第07集</span>
+                            </a>
+                            <a href="/p/850506/153/12535265" class="module-play-list-link childVodId12535265">
+                              <span>第08集</span>
+                            </a>
+                            <a href="/p/850506/153/12180311" class="module-play-list-link childVodId12180311">
+                              <span>第09集</span>
+                            </a>
+                            <a href="/p/850506/153/12224515" class="module-play-list-link childVodId12224515">
+                              <span>第10集</span>
+                            </a>
+                            <a href="/p/850506/153/11994348" class="module-play-list-link childVodId11994348">
+                              <span>第11集</span>
+                            </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="module-list sort-list tab-list play-tab-list "
+                      id="panel2"
+                      data-index="3"
+                    ><video style="display: none;">火箭云</video>
+                      <div class="module-play-list ">
+                        <div
+                          class="module-play-list-content module-play-list-base"
+                        >
+                            <a href="/p/850506/153/11961376" class="module-play-list-link childVodId11961376">
+                              <span>第01集</span>
+                            </a>
+                            <a href="/p/850506/153/11994445" class="module-play-list-link childVodId11994445">
+                              <span>第02集</span>
+                            </a>
+                        </div>
+                      </div>
+                    </div>
+                <script type="text/javascript">
+                  $(function () {
+                    var host = $(location).attr("host");
+                    var shareObj = $(".share-btn");
+                    var shareTxt = host + shareObj.attr("data-clipboard-text");
+                    shareObj.attr("data-clipboard-text", shareTxt);
+                  });
+                  var curPlaylineId_032, pareSelect_032, pareIndex_032;
+                </script>
+              <div class="tem_ref_dom">
+              <script>
+                $(document).ready(function (params) {
+                  const creatCurEle = $(
+                    `<div class="playon"><i></i><i></i><i></i><i></i></div>`
+                  );
+                  $(`.childVodId${curPlaylineId}`)
+                    .append(creatCurEle)
+                    .addClass("active");
+                  const vodPlayCurParEle = $(`.childVodId${curPlaylineId}`)
+                    .parent()
+                    .parent()
+                    .parent();
+                  const parIndex = vodPlayCurParEle.data("index");
+                  vodPlayCurParEle.addClass("active");
+                  $(`#lineBtn${parIndex}`).addClass("active");
+                  $(`#lineBtn_h5${parIndex}`).addClass("active");
+                });
+                $(".player-heading .module-tab-item").click(function(){
+                  $(".player-heading .module-tab-item").removeClass("active")
+                  $(this).addClass("active")
+                  let ids = $(this).index() || 0
+                  $(".play-tab-list").hide()
+                  $(".play-tab-list").eq(ids).show().addClass("dx")
+                })
+              </script>
+              </div>
+             </div>
+            </div>
+          </div>
+        </div>
+      </div>
+          <div class="module">
+            <div class="module-heading">
+              <h2 class="module-title">相关推荐</h2>
+            </div>
+            <div class="module-main">
+              <div class="module-items module-poster-items-base">
+  <a href="/v/849524/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">全13集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://snzypic.vip/upload/vod/20250704-1/13a3a8946ccc19d3ef9584d0abf3676a.jpg" alt="为丑女献上花束"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">为丑女献上花束</div>
+    </div>
+  </a>
+  <a href="/v/1360/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">更新至第111集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://img.lzzyimg.com/upload/vod/20230415-1/15acb78bf53ea418bbbe8381d1750844.jpg" alt="新宝可梦"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">新宝可梦</div>
+    </div>
+  </a>
+  <a href="/v/882431/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">更新至01集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://snzypic.vip/upload/vod/20250926-1/6f5faa50d04c4bdf1de03f14ed7c1d2b.jpg" alt="猫眼三姐妹2025"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">猫眼三姐妹2025</div>
+    </div>
+  </a>
+  <a href="/v/882407/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">更新至第01集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://viptulz.com/upload/vod/20250926-1/e702627f8ae4fd4ffe4b72af4987efb7.jpg" alt="猫眼三姐妹"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">猫眼三姐妹</div>
+    </div>
+  </a>
+  <a href="/v/854292/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">更新至第13集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://viptulz.com/upload/vod/20250718-1/b744c97591368c97e07eb60b4a5ff234.jpg" alt="龙族第二季"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">龙族第二季</div>
+    </div>
+  </a>
+  <a href="/v/849276/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">全12集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://snzypic.vip/upload/vod/20250704-1/96a6d41f28a7fba629487ddf473e4bc2.jpg" alt="水属性魔法使"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">水属性魔法使</div>
+    </div>
+  </a>
+  <a href="/v/667452/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">全13集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://suonipic.com/upload/vod/20241007-1/d8b861ff137b9544556f40e9d2e77f75.jpg" alt="稗记舞咏"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">稗记舞咏</div>
+    </div>
+  </a>
+  <a href="/v/849272/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">全12集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://snzypic.vip/upload/vod/20250704-1/29332790dc8fb782d27cfcde976d98a4.jpg" alt="神椿市建设中。"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">神椿市建设中。</div>
+    </div>
+  </a>
+  <a href="/v/851948/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">全12集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://snzypic.vip/upload/vod/20250711-1/f1cd4f0de83d7620e9b0c94f6d36fd72.jpg" alt="双人独自露营"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">双人独自露营</div>
+    </div>
+  </a>
+  <a href="/v/779448/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">全24集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://suonipic.com/upload/vod/20250109-1/db0d1f6d0b62d422dc3ea59202bd14d3.jpg" alt="石纪元第四季"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">石纪元第四季</div>
+    </div>
+  </a>
+  <a href="/v/817094/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">更新至24集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://snzypic.vip/upload/vod/20250415-1/9f6233b6484e7ff5399b075a9526fc30.jpg" alt="公主的管弦乐团"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">公主的管弦乐团</div>
+    </div>
+  </a>
+  <a href="/v/856767/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">更新至05集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://snzypic.vip/upload/vod/20250724-1/26891367603ff42919ddbcd72a1fc3ec.jpg" alt="去唱卡拉OK吧！动画版"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">去唱卡拉OK吧！动画版</div>
+    </div>
+  </a>
+  <a href="/v/851586/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">更新至12集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://snzypic.vip/upload/vod/20250710-1/c5026e787e4b31430a6346dfee528e35.jpg" alt="伤痕累累的圣女的复仇"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">伤痕累累的圣女的复仇</div>
+    </div>
+  </a>
+  <a href="/v/851584/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">全13集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://snzypic.vip/upload/vod/20250710-1/af90f1bbf138fd7d150d75c4bc9139da.jpg" alt="新吊带袜天使"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">新吊带袜天使</div>
+    </div>
+  </a>
+  <a href="/v/851549/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">全12集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://snzypic.vip/upload/vod/20250710-1/3a324ad6553310094298bbe4519304af.jpg" alt="转生为第七王子，随心所欲的魔法学习之路第二季"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">转生为第七王子，随心所欲的魔法学习之路第二季</div>
+    </div>
+  </a>
+  <a href="/v/881684/153" class="module-poster-item module-item" target="_blank">
+    <div class="module-item-cover">
+      <div class="module-item-note">更新至第01集</div>
+      <div class="module-item-pic">
+        <img class="lazy lazyload" data-original="https://viptulz.com/upload/vod/20250924-1/088e3f48eaf786605a8e9669d2a2f5a6.jpg" alt="无职英雄～技能什么的毫无用处～"
+          referrerpolicy="no-referrer" src="/static/image/loadingpic.jpg" />
+      </div>
+    </div>
+    <div class="module-poster-item-info">
+      <div class="module-poster-item-title">无职英雄～技能什么的毫无用处～</div>
+    </div>
+  </a>
+              </div>
+            </div>
+          </div>
+      <div style="margin-top: 10px;">
+      </div>
+    </div>
+  </div>
+<div class="tem_ref_dom">
+  <script>
+    function reverse_f(node) {
+                          $('.module-play-list-content').each(function (params) {
+                              let fatherEle = $(this);
+                              let episodesEle = $(this).children();
+                              episodesEle.each(function (params) {
+                                  fatherEle.prepend($(this))
+                              })
+                          })
+                      }
+    $(function () {
+    $("#sortBtn").click(function () {
+      let index = 0;
+      $(".module-list").each(function (listIndex, val) {
+        if ($(val).hasClass("active")) {
+          index = listIndex;
+        }
+      });
+      let templateHtml = [];
+      $(".module-list")
+        .eq(index)
+        .find(".module-play-list-link")
+        .each(function (linkIndex, val) {
+          templateHtml.push(val);
+        });
+      let reverseTemplateHtml = templateHtml.reverse();
+      $(".module-list")
+        .eq(index)
+        .find(".module-play-list-content")
+        .html(reverseTemplateHtml);
+    });
+  });
+    $(function () {
+    $("#y-first-name").html(
+      $("#y-playList").find(".tab-item").eq(0).children("span").text()
+    );
+    $(document).ready(function (params) {
+              setTimeout(() => {
+               $("#player-first-name").html($(".play-tab-list.active video").text())
+             }, 0);
+         })
+      $(".module-tab-item span").click(function(){
+       $("#player-first-name").html($(this).text())
+      })
+    $(".search-input").click(function () {
+      $(".homepage,.searchbar-main").addClass("open");
+    });
+    $(".header-op-search").click(function () {
+      $(".homepage,.searchbar-main").addClass("open");
+      $(".page,.searchbar-main").addClass("open");
+    });
+    $(document).click(function (e) {
+      if (
+        ($(e.target).closest(".search-input").length == 0 ||
+          $(e.target).closest(".cancel-btn").length != 0) &&
+        $(e.target).closest(".header-op-search").length == 0
+      ) {
+        $(e.target).closest(".header-op-search").length == 0;
+        $(".homepage,.page,.searchbar-main").removeClass("open");
+      }
+    });
+    $(".lazyload").lazyload({
+      effect: "fadeIn",
+      skip_invisible: false,
+      event: "sporty",
+      threshold: 500,
+    });
+    let index = $("#playSwiper .swiper-wrapper").find(".active").index();
+    let navIndex = $(".navbar .swiper-wrapper").find(".active").index();
+    const swiper = new Swiper("#playSwiper", {
+      slidesPerView: "auto",
+      hashNavigation: true,
+    });
+    if (swiper.$el) {
+      swiper.slideTo(index - 1);
+    }
+    const swiperNav = new Swiper(".navbar", {
+      freeMode: true,
+      slidesPerView: "auto",
+    });
+    function initNavSwiper() {
+      if (window.innerWidth < 559) {
+        swiperNav.enable();
+        if (navIndex > 4) {
+          swiperNav.slideTo(navIndex - 1);
+        }
+        return;
+      } else {
+        swiperNav.slideTo(0);
+        swiperNav.disable();
+      }
+    }
+    initNavSwiper();
+    function retop() {
+      let scrollTop =
+        document.documentElement.scrollTop ||
+        window.pageYOffset ||
+        document.body.scrollTop;
+      if (scrollTop >= 1000) {
+        $(".retop").css("display", "flex");
+      } else {
+        $(".retop").hide();
+      }
+    }
+    $(".retop").click(function () {
+      timer = setInterval(function () {
+        let scrollTop =
+          document.documentElement.scrollTop ||
+          window.pageYOffset ||
+          document.body.scrollTop;
+        document.documentElement.scrollTop = document.body.scrollTop =
+          Math.floor(scrollTop - 100);
+        if (scrollTop === 0 || document.documentElement.scrollTop === 0) {
+          clearInterval(timer);
+          setTimeout(() => {
+            swiperNav.update(true);
+          }, 150);
+        }
+      }, 10);
+    });
+    window.addEventListener("scroll", function () {
+      retop();
+      swiperNav.update(true);
+    });
+    window.addEventListener("resize", function () {
+      initNavSwiper();
+    });
+    $(".module").each(function (index, el) {
+      $(this)
+        .find(".tab-item")
+        .click(function () {
+          if (!$(this).hasClass("active")) {
+            $(this).addClass("active").siblings().removeClass("active");
+            $(el)
+              .find(".tab-list")
+              .eq($(this).index())
+              .addClass("active")
+              .siblings()
+              .removeClass("active");
+            $(el)
+              .find(".tab-list")
+              .eq($(this).index())
+              .find(".lazyload")
+              .lazyload();
+          }
+          $(".module-tab-drop").removeClass("module-tab-drop");
+          $(this)
+            .parents(".module-tab-items")
+            .siblings(".module-tab-name")
+            .children(".module-tab-value")
+            .text($(this).attr("data-dropdown-value"));
+        });
+    });
+    $("#playSwiper").find(".tab-item").off("click");
+    $("#playSwiper")
+      .find(".tab-item")
+      .click(function () {
+        if (!$(this).hasClass("active")) {
+          if ($(this).index() > 1) {
+            console.log("右滑动", $(this).index());
+            swiper.slideNext();
+          } else {
+            console.log("左滑动", $(this).index());
+            swiper.slidePrev();
+          }
+          $(this).addClass("active").siblings().removeClass("active");
+          $(".tab-list")
+            .eq($(this).index())
+            .addClass("active")
+            .siblings()
+            .removeClass("active");
+        }
+        $(".module-tab-drop").removeClass("module-tab-drop");
+        $(this)
+          .parents(".module-tab-items")
+          .siblings(".module-tab-name")
+          .children(".module-tab-value")
+          .text($(this).attr("data-dropdown-value"));
+      });
+    $(".module-tab .module-tab-name").click(function () {
+      $(this).parent(".module-tab").addClass("module-tab-drop");
+      $(".module-tab-items").css("visibility", "visible");
+      $(".swiper.module-tab-items").css("visibility", "");
+      $(".module-tab-items-box").css("display", "");
+    });
+    $(".shortcuts-mobile-overlay,.close-drop").click(function () {
+      $(".module-tab-drop").removeClass("module-tab-drop");
+      $(".module-tab-items").removeAttr("style", "");
+    });
+    function show_tip(text) {
+      $(".shortcuts-box").show();
+      $("#shortcuts-info").html(text);
+      setTimeout(function () {
+        $(".shortcuts-box").fadeOut(1000);
+      }, 2000);
+    }
+    $(".historyclean").on("click", function () {
+      $.cookie("mac_history_mxpro", null, { expires: -1, path: "/" });
+    });
+    $(".drop-qrcode-img").qrcode({
+      text: location.href,
+      render: "canvas",
+      width: 265,
+      height: 265,
+    });
+    var clipboard = new ClipboardJS(".share-btn");
+    clipboard.on("success", function (e) {
+      show_tip("分享信息复制成功，赶紧去分享吧～");
+    });
+    clipboard.on("error", function (e) {
+      console.log(e);
+    });
+    $(".module-heading-tab .module-heading-tab-link").click(function () {
+      $(".module-heading-tab span")
+        .eq($(this).index())
+        .addClass("active")
+        .siblings()
+        .removeClass("active");
+      $(".tab-list")
+        .eq($(".module-heading-tab .module-heading-tab-link").index(this))
+        .addClass("active")
+        .siblings()
+        .removeClass("active");
+      $(".tab-list")
+        .eq($(".module-heading-tab .module-heading-tab-link").index(this))
+        .find(".lazyload")
+        .lazyload();
+    });
+    let cookie = document.cookie;
+    const popup = document.querySelector("#popup");
+    if (!cookie.includes("showBtn")) {
+    }
+  });
+  </script>
+</div>
+<div class="footer">
+	<div class="content">
+				<p style="display: flex;align-items: center;margin-bottom: 5px;">
+					<span style="font-weight: bold">友情链接：</span>
+						<a style="margin-right: 10px;" target="_blank" href="https://www.yhdmtv.cc/"
+							index="0">樱花动漫</a>
+						<a style="margin-right: 10px;" target="_blank" href="https://www.cbhtv.cc/"
+							index="1">茶杯狐</a>
+						<a style="margin-right: 10px;" target="_blank" href="https://www.mjtt2.cc/"
+							index="2">美剧天堂</a>
+						<a style="margin-right: 10px;" target="_blank" href="https://www.zbkatv.cc/"
+							index="3">真不卡影院</a>
+						<a style="margin-right: 10px;" target="_blank" href="https://www.hjtv5.cc/"
+							index="4">韩剧tv</a>
+						<a style="margin-right: 10px;" target="_blank" href="https://www.xkytv.cc/"
+							index="5">星空影院</a>
+						<a style="margin-right: 10px;" target="_blank" href="https://www.fcdmtv.cc/"
+							index="6">风车动漫</a>
+						<a style="margin-right: 10px;" target="_blank" href="https://www.hjwtv.cc/"
+							index="7">韩剧网</a>
+						<a style="margin-right: 10px;" target="_blank" href="http://www.xcytv.cc/"
+							index="8">星辰影院</a>
+						<a style="margin-right: 10px;" target="_blank" href="https://www.ccytv.cc/"
+							index="9">策驰影院</a>
+				</p>
+	  <div class="footer-content">
+		<div class="foot-logo">
+				<img class="logo2" src="/data/uploadFile/CNKxSd1743999156869026.png" alt="樱花动漫" />
+		</div>
+		<div class="foot-copyright">
+		  <p>
+			本站内容均从互联网收集而来，仅供交流学习使用，版权归原创者所有如有侵犯了您的权益，尽请通知我们，本站将及时删除侵权内容。
+		  <br/>
+			Copyright @ 2023 樱花动漫 版权所有
+		  </p>
+		</div>
+	  </div>
+	</div>
+  </div>
+</div>
+            <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3NBGxgKTOYXDwBRh",ck:"3NBGxgKTOYXDwBRh"})</script>
+<link rel="stylesheet" href="/libs/member/css/layui.min.css" />
+<link rel="stylesheet" href="/libs/member/css/layuicus.css" />
+<link rel="stylesheet" href="/libs/member/css/index.min.css" />
+<script src="/libs/member/js/layui.min.js"></script>
+<script src="/libs/commJs/md5.js"></script>
+<script src="/libs/commJs/axios.js"></script>
+<script src="/libs/commJs/http.js"></script>
+<script src="/libs/member/js/index.js"></script>
+<div id="cmstem_login">
+    <img onclick="closeTemLogin()" class="cmstem_log_close_img" src="/iyplayer/default/images/layui/close.svg">
+    <div class="layuicms-tab layuicms-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layuicms-tab-title" id="tem_log_res_tit">
+            <li>账号<span class="cmstem_acc_log">登录</span><span class="cmstem_acc_res">注册</span>
+            </li>
+        </ul>
+        <div class="layuicms-tab-content" id="tem_log_res_cont">
+            <div class="layuicms-tab-item">
+                <form class="layuicms-form" lay-filter="formAccBox">
+                    <div class="layuicms-form-item">
+                        <div class="layuicms-input-block">
+                            <input type="text" name="userName" required placeholder="请输入账号" lay-verify="username"
+                                lay-verType="tips" autocomplete="off" class="layuicms-input">
+                            <i class="cmstem_inp_requ">*</i>
+                            <img class="tem_inp_icon" src="/libs/commIcon/account.svg" alt="">
+                        </div>
+                    </div>
+                    <div class="layuicms-form-item">
+                        <div class="layuicms-input-block">
+                            <input type="password" name="password" required placeholder="请输入密码" lay-verify="password"
+                                lay-verType="tips" autocomplete="off" class="layuicms-input">
+                            <i class="cmstem_inp_requ">*</i>
+                            <img class="tem_inp_icon" src="/libs/commIcon/pass.svg" alt="">
+                        </div>
+                    </div>
+                    <div class="cmstem_acc_res_firpass">
+                    </div>
+                    <button class="tem_login_btn layuicms-btn" lay-submit lay-filter="temLoginformAcc">
+                        <i class="layuicms-icon layuicms-anim layuicms-anim-rotate layuicms-anim-loop layuicms-icon-loading"
+                            style="display: none;"></i><span class="cmstem_acc_log">登录</span><span
+                            class="cmstem_acc_res">注册</span></button>
+                    <div class="layuicms-form-item cmstem_user_agreement">
+                        <div class="layuicms-input-block ">
+                            <input lay-filter="temCheckAgree" type="radio" name="agreement" value="true"
+                                title="同意《个人信息保护政策》《服务政策》">
+                        </div>
+                    </div>
+                    <p class="cmstem_login_noacc">
+                        还没有账号？去 <span class="cmstem_go_fra cmstem_acc_log" onclick="temGoRes()">注册</span> <span
+                            class="cmstem_go_fra cmstem_acc_res" onclick="temGoLog()">登录</span>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+        <script>
+            temRemoveToken()
+        </script>
+<link rel="stylesheet" href="/libs/plugins/css/index.css">
+<script src="/libs/commJs/jquery.qrcode.min.js"></script>
+<ul class="stui-extra clearfix" id="cms_app_downloads">
+    <div id="cms_go_top" style="display: none;">
+        <li class="cms_util_li">
+            <a class="" href="javascript:;">
+                <svg style="width: 18px;height: 18px;" class="tem_side_svg tem_jiantou_svg" aria-hidden="true">
+                    <use xlink:href="#icon-arrow-up"></use>
+                </svg>
+            </a>
+        </li>
+    </div>
+</ul>
+<script>
+    $(document).ready(function () {
+        let apkUrl = '';
+        const temAppAndr = "";
+        if (temAppAndr.startsWith("http")) {
+            apkUrl = temAppAndr
+        } else {
+            apkUrl = location.origin + temAppAndr;
+        }
+        const iosUrl = location.origin + "/libs/ios/downloads.html"
+        if ($("#cms_qrcode_apk").length > 0) {
+            $("#cms_qrcode_apk").qrcode({
+                render: "canvas",
+                width: 160,
+                height: 160,
+                text: temUtf16to8(apkUrl),
+                typeNumber: -1,
+                correctLevel: 2,
+                background: "#ffffff",
+                foreground: "#000000"
+            });
+        }
+        if ($("#cms_qrcode_ios").length > 0) {
+            $("#cms_qrcode_ios").qrcode({
+                render: "canvas",
+                width: 160,
+                height: 160,
+                text: iosUrl,
+                typeNumber: -1,
+                correctLevel: 2,
+                background: "#ffffff",
+                foreground: "#000000"
+            });
+        }
+        function isH5() {
+            var ua = navigator.userAgent;
+            if (ua.indexOf("Mobile") > -1 || ua.indexOf("Android") > -1 || ua.indexOf("iPhone") > -1 || ua.indexOf("iPad") > -1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        const pcState = isH5()
+        $(".cms_apk_download").click(() => {
+            if (isH5()) {
+                window.location.href = ""
+            } else {
+            }
+        })
+        $(".cms_ios_download").click(() => {
+            if (isH5()) {
+                window.location.href = "/libs/ios/downloads.html"
+            } else {
+            }
+        })
+        $(window).scroll(function () {
+            if ($(window).scrollTop() >= 500) {
+                $('#cms_go_top').css('display', 'block');
+            } else {
+                $('#cms_go_top').css('display', 'none');
+            }
+        });
+        $('#cms_go_top').click(function () {
+            $('html,body').animate({ 'scrollTop': 0 });
+        })
+        $(".cms_app_hover").mousemove(function () {
+            const index = $(".cms_app_hover").index(this)
+            if (!pcState) {
+                $(".cms_sideslip").eq(index).show()
+            }
+        })
+        $(".cms_app_hover").mouseleave(function () {
+            const index = $(".cms_app_hover").index(this)
+            if (!pcState) {
+                $(".cms_sideslip").eq(index).hide()
+            }
+        })
+    })
+    $(document).ready(() => {
+        $('#cms_go_top').hide()
+    })
+    $(document).ready(() => {
+        if (window.self !== window.top) {
+            $(".cms_app_hover")?.hide();
+        }
+    });
+</script>
+<style>
+    :root {
+        --tem--base--color: #e50914;
+        --tem--base--conf--color: #e50914;
+		--cms--notice--button:#e50914;
+    }
+</style>
+<script src="/static/js/swiperbanner032.js"></script>
+</body>
+</html>

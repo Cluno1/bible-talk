@@ -10,7 +10,7 @@ import {
   type MediaViewType,
 } from 'vidstack';
 import type { MediaPlayerElement } from 'vidstack/elements';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 
 import AudioLayout from './components/layouts/AudioLayout.vue';
 import VideoLayout from './components/layouts/VideoLayout.vue';
@@ -18,6 +18,8 @@ import { useConfigStore } from '@/store/configStore';
 import type { VideoType } from '@/type/video';
 
 const config = useConfigStore()
+
+const isM3u8 = ref(false)
 
 const $player = ref<MediaPlayerElement>(),
   $src = ref(''),
@@ -31,17 +33,26 @@ const props = defineProps<{
 
 // Initialize src.
 function init() {
+
+
   for (const track of props.data.textTracks || []) $player.value!.textTracks.add(track);
   $src.value = props.data.videoUrl;
 }
 
-watch(()=>props.data,()=>{
+watch(() => props.data.videoUrl, () => {
+  if (props.data.videoUrl.includes('m3u8')) {
+    return;
+  }
   init()
 })
 
 onMounted(() => {
+  console.log('Player mounted')
 
-  
+
+  if (props.data.videoUrl.includes('m3u8')) {
+    return;
+  }
   init()
 
   return $player.value!.subscribe(({ paused, viewType }) => {
@@ -50,11 +61,19 @@ onMounted(() => {
   });
 });
 
+onUnmounted(() => {
 
+  console.log('Player unmounted')
+  if ($player.value) {
+    $player.value.src = ''        // 清空资源
+    $player.value.pause()       // 强制暂停
+    // 如果用了 hls 插件，Vidstack 内部会自动清理
+  }
+})
 </script>
 
 <template>
-  <media-player :class="['player', 'dark']" title="Sprite Fight" :src="$src" crossOrigin playsInline ref="$player"
+  <media-player :class="['player', 'dark']" v-if="!isM3u8" title="标题" :src="$src" crossOrigin playsInline ref="$player"
     :style="{
       '--media-focus-ring-color': config.mainColor,
       '--media-focus-ring': '0 0 0 3px var(--media-focus-ring-color)'

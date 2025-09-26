@@ -24,7 +24,7 @@ const configStore = useConfigStore()
         <!-- main -->
         <el-main class="min-h-[79vh]">
           <div class="main w-full overflow-auto pb-3 mb-3" :style="{ 'max-height': '97vh' }">
-            <router-view />
+            <router-view :key="$route.fullPath" />
           </div>
 
         </el-main>
@@ -43,7 +43,7 @@ const configStore = useConfigStore()
       <!-- main -->
       <el-main>
         <div class="main w-full" :style="{ 'height': '90vh', 'overflow': 'auto' }">
-          <router-view />
+          <router-view :key="$route.fullPath" />
         </div>
 
       </el-main>

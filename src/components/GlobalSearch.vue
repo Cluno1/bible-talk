@@ -451,8 +451,13 @@ function handleClick() {
             })
             return ElMessage.success('添加视频成功')
         }
-
-        ElMessage.error('找不到数据')
+        // ElMessage.error('找不到数据')
+        router.push({
+            path: '/video/search',
+            query: {
+                kw: formatVal
+            }
+        })
 
     } catch (e: any) {
 

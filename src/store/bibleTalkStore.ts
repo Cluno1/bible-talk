@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
 import { useConfigStore } from "./configStore";
-import { btDataDemo2 } from "@/utils/default/page/bt";
-import { helpDoc } from "@/utils/default/page/help";
 import type { BibleTalkDataType } from "@/type/page";
+import { localPages } from "@/utils/default/page";
 
 export const useBibleTalkStore = defineStore("bibleTalk", () => {
   const datastorage = new Map<string, BibleTalkDataType>(); // id  => data
@@ -16,7 +15,7 @@ export const useBibleTalkStore = defineStore("bibleTalk", () => {
    * @returns
    */
   function getData(id: string): boolean {
-    const a = [btDataDemo2, helpDoc].find((_i) => _i.id === id);
+    const a = localPages.find((_i) => _i.id === id);
     console.log('getdata',a)
     //这里本地查询
     if (a) {

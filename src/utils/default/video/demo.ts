@@ -51,7 +51,20 @@ export const videoDemo2: VideoType = {
     "https://bible-1328751369.cos.ap-guangzhou.myqcloud.com/video/%E5%AE%88%E5%80%99%20-%20%E8%B5%B5%E8%8B%B1%E4%BF%8A%20live.mp4",
 };
 
-const localVideos = [videoDemo, videoDemo2];
+
+export const videoDemo3: VideoType = {
+  id: "demo_2",
+  title: "demo_2",
+  describe:
+    "demo_2",
+
+  videoUrl:
+    "https://vip.dytt-cinema.com/20250407/19290_989f7898/index.m3u8",
+};
+
+//https://vip.dytt-hot.com/20250520/90511_055b8d75/index.m3u8
+
+const localVideos = [videoDemo, videoDemo2,videoDemo3];
 
 localMusicAlbums.forEach((i) => {
   (i?.videos || []).forEach((i) => localVideos.push(i));
