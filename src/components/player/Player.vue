@@ -1,105 +1,114 @@
-<script lang="ts" setup>
-// Import styles.
-import 'vidstack/player/styles/default/theme.css';
-// Register elements.
-import 'vidstack/player';
-import 'vidstack/player/ui';
-import 'vidstack/icons';
+<!-- HtmlOrVideo.vue -->
+<template>
+  <div class="w-full">
+    <!-- 情况 A：纯视频 -->
+    <div v-if="!isHtml && !isHtmlLoading" class="w-full">
+      <media-player
+        ref="$player"
+        :src="videoUrl"
+        crossorigin
+        playsinline
+        title="标题"
+        :class="['player', 'dark']"
+        :style="{
+          '--media-focus-ring-color': config.mainColor,
+          '--media-focus-ring': '0 0 0 3px var(--media-focus-ring-color)'
+        }"
+      >
+        <media-provider>
+          <media-poster
+            v-if="$viewType === 'video'"
+            class="vds-poster"
+            :src="data.videoAlbumUrl"
+            alt="主页图片"
+          />
+        </media-provider>
 
-import {
-  type MediaViewType,
-} from 'vidstack';
-import type { MediaPlayerElement } from 'vidstack/elements';
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+        <AudioLayout v-if="$viewType === 'audio'" />
+        <VideoLayout v-if="$viewType === 'video'" :thumbnails="data.thumbnailsUrl" />
+      </media-player>
+    </div>
 
-import AudioLayout from './components/layouts/AudioLayout.vue';
-import VideoLayout from './components/layouts/VideoLayout.vue';
-import { useConfigStore } from '@/store/configStore';
-import type { VideoType } from '@/type/video';
+    <!-- 情况 B：返回的是 html -->
+    <div v-else-if="isHtml && !isHtmlLoading" class="w-full aspect-video">
+      <iframe
+        :src="videoUrl"
+        class="w-full h-full rounded-lg"
+        frameborder="0"
+        allowfullscreen
+      />
+    </div>
 
+    <!-- 加载中 -->
+    <div v-else class="w-full aspect-video grid place-content-center text-white bg-gray-900">
+      <span>识别资源类型中…</span>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, watchEffect, onUnmounted } from 'vue'
+import type { MediaPlayerElement } from 'vidstack/elements'
+import { useConfigStore } from '@/store/configStore'
+import AudioLayout from './components/layouts/AudioLayout.vue'
+import VideoLayout from './components/layouts/VideoLayout.vue'
+import type { VideoType } from '@/type/video'
+
+/* ---------- props & store ---------- */
+const props = defineProps<{ data: VideoType }>()
 const config = useConfigStore()
 
-const isM3u8 = ref(false)
+/* ---------- 状态 ---------- */
+const $player = ref<MediaPlayerElement>()
+const isHtml = ref(false)          // 最终判定
+const isHtmlLoading = ref(true)    // 识别中
+const videoUrl = ref(props.data.videoUrl)
 
-const $player = ref<MediaPlayerElement>(),
-  $src = ref(''),
-  $viewType = ref<MediaViewType>('unknown');
-
-
-const props = defineProps<{
-  data: VideoType
-}>()
-
-
-// Initialize src.
-function init() {
-
-
-  for (const track of props.data.textTracks || []) $player.value!.textTracks.add(track);
-  $src.value = props.data.videoUrl;
+/* ---------- 识别函数 ---------- */
+async function detectContentType(url: string) {
+  try {
+    const r = await fetch(url, { method: 'HEAD', mode: 'no-cors' })
+    // 在 no-cors 下 headers 拿不到，但我们可以取巧：
+    // 直接 fetch 一段，看能否解析成视频/音频资源
+    const probe = await fetch(url, { method: 'GET', mode: 'no-cors' })
+    const blob = await probe.blob()
+    if (blob.type.startsWith('video') || blob.type.startsWith('audio') || url.includes('.m3u8')) {
+      isHtml.value = false
+    } else if (blob.type.includes('text/html')) {
+      isHtml.value = true
+    } else {
+      // 保守 fallback：带 .html 就当 html
+      isHtml.value = url.includes('.html')
+    }
+  } catch {
+    // 网络错误时也按视频处理
+    isHtml.value = false
+  } finally {
+    isHtmlLoading.value = false
+  }
 }
 
-watch(() => props.data.videoUrl, () => {
-  if (props.data.videoUrl.includes('m3u8')) {
-    return;
-  }
-  init()
+/* ---------- 生命周期 ---------- */
+watchEffect(() => {
+  // 支持动态换 src
+  videoUrl.value = props.data.videoUrl
+  isHtmlLoading.value = true
+  detectContentType(videoUrl.value)
 })
 
-onMounted(() => {
-  console.log('Player mounted')
-
-
-  if (props.data.videoUrl.includes('m3u8')) {
-    return;
-  }
-  init()
-
-  return $player.value!.subscribe(({ paused, viewType }) => {
-    $viewType.value = viewType;
-    console.log('is paused?', '->', paused);
-  });
-});
-
 onUnmounted(() => {
-
-  console.log('Player unmounted')
   if ($player.value) {
-    $player.value.src = ''        // 清空资源
-    $player.value.pause()       // 强制暂停
-    // 如果用了 hls 插件，Vidstack 内部会自动清理
+    $player.value.src = ''
+    $player.value.pause()
   }
 })
 </script>
 
-<template>
-  <media-player :class="['player', 'dark']" v-if="!isM3u8" title="标题" :src="$src" crossOrigin playsInline ref="$player"
-    :style="{
-      '--media-focus-ring-color': config.mainColor,
-      '--media-focus-ring': '0 0 0 3px var(--media-focus-ring-color)'
-    }">
-    <media-provider>
-      <media-poster v-if="$viewType === 'video'" class="vds-poster" :src="data.videoAlbumUrl" alt="主页图片" />
-    </media-provider>
-
-    <AudioLayout v-if="$viewType === 'audio'" />
-    <VideoLayout v-if="$viewType === 'video'" :thumbnails='data.thumbnailsUrl' />
-  </media-player>
-
-</template>
-
 <style scoped>
-* {
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+/* 仅保留与 Vidstack 变量相关的样式，其余全用 Tailwind */
 .player {
   --media-brand: #f5f5f5;
 }
-
 .player[data-view-type='audio'] {
   --media-tooltip-y-offset: 44px;
   --media-menu-y-offset: 40px;
@@ -109,27 +118,16 @@ onUnmounted(() => {
   border-radius: var(--media-border-radius);
   contain: layout;
 }
-
 .player[data-view-type='video'] {
   --media-tooltip-y-offset: 30px;
   --media-menu-y-offset: 30px;
-  aspect-ratio: 16 /9;
+  aspect-ratio: 16/9;
   background-color: #212121;
   border-radius: var(--media-border-radius);
   contain: layout;
 }
-
 .player :deep(video),
 media-poster {
   border-radius: var(--media-border-radius);
-}
-
-.src-buttons {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  margin-top: 40px;
-  margin-inline: auto;
-  max-width: 300px;
 }
 </style>

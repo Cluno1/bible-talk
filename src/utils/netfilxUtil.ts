@@ -341,99 +341,6 @@ export function yhdmDetailExtract(
 }
 
 /**
- * 解析搜索的html
- * @param html
- * @returns
- */
-export function YHDMExtract(html: string): {
-  pagination: NetflixPaginationType;
-  cards: NetflixVideoCardType[];
-} {
-  const $ = cheerio.load(html);
-
-  /* ---------- 1. 分页 ---------- */
-  // 当前页码：直接拿分页高亮节点文本
-  const now = Number($("#page .page-number.page-current a").text().trim()) || 1;
-
-  // 总页数：凡人搜索页没有“data-total”，只能拿“尾页”href里的page值
-  const tailHref = $('#page a:contains("尾页")').attr("href") || "";
-  const total =
-    Number(new URLSearchParams(tailHref.split("?")[1]).get("page")) || 1;
-
-  const headPageHref = $('#page a:contains("首页")').attr("href") || "";
-  const lastPageHref = $('#page a:contains("上一页")').attr("href") || "";
-  const nextPageHref = $('#page a:contains("下一页")').attr("href") || "";
-  const tailPageHref = tailHref;
-
-  const pagination: NetflixPaginationType = {
-    now,
-    total, //总页数
-    headPageHref,
-    lastPageHref,
-    nextPageHref,
-    tailPageHref,
-  };
-
-  /* ---------- 2. 视频卡片 ---------- */
-  const cards: NetflixVideoCardType[] = $(".module-card-item")
-    .map((_, el) => {
-      const $el = $(el);
-
-      /* 图片 */
-      const videoPic = $el
-        .find(".module-item-pic img[data-original]")
-        .attr("data-original")
-        ?.trim();
-
-      /* 备注：更新至xx集 / 已完结 */
-      const remarks = $el.find(".module-item-note").text().trim();
-
-      /* 标题 + 详情页地址 */
-      const $titleA = $el.find(".module-card-item-title a");
-      const title = $titleA.text().replace(/\s+/g, " ").trim();
-      const href = $titleA.attr("href")?.trim() || "";
-
-      /* 分类 & 地区 & 年份  格式：2020 / 大陆 / */
-      const metaArr = $el
-        .find(".module-info-item-content")
-        .first()
-        .contents()
-        .filter(function () {
-          // 只保留文本节点
-          return this.nodeType === 3;
-        })
-        .map((_, node) => $(node).text().trim())
-        .get()
-        .filter(Boolean); // 去掉空串
-
-      const [date, region] = metaArr;
-
-      /* 简介 */
-      const introduction = $el
-        .find(".module-info-item-content")
-        .last()
-        .text()
-        .trim();
-
-      const meta: NetflixVideoCardType["meta"] = {
-        director: undefined,
-        roles: undefined,
-        category: $el.find(".module-card-item-class").first().text().trim(), // 国产动漫 / 综合
-        region,
-        date,
-        update: remarks, // 把“更新至xx集”放到update字段
-        introduction,
-        other: [],
-      };
-
-      return { videoPic, score: "", remarks, title, href, meta };
-    })
-    .get();
-
-  return { pagination, cards };
-}
-
-/**
  * getM3u8 by html
  * @param html
  * @returns
@@ -450,4 +357,66 @@ export function netflixGetM3u8(html: string) {
     console.log("没抓到");
     return "";
   }
+}
+
+
+/**
+ * 深合并两个任意值，规则：
+ * 1. 一方为 undefined / null 时取另一方；
+ * 2. 都是数组时，去重合并；
+ * 3. 都是对象时，递归合并字段；
+ * 4. 其余情况取「更全」的一方（非空优先）。
+ */
+function deepMerge<T>(a: T, b: T): T {
+  if (a === undefined || a === null) return b;
+  if (b === undefined || b === null) return a;
+
+  if (Array.isArray(a) && Array.isArray(b)) {
+    // 去重合并
+    return Array.from(new Set([...a, ...b])) as unknown as T;
+  }
+
+  if (typeof a === 'object' && typeof b === 'object') {
+    const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+    const res: any = {};
+    keys.forEach(k => {
+      res[k] = deepMerge((a as any)[k], (b as any)[k]);
+    });
+    return res;
+  }
+
+  // 非空优先
+  return (a !== '' && a !== 0) ? a : b;
+}
+
+/**
+ * 对比两个 NetflixVideoCardType，返回「更全」的一份。
+ * 不会修改原始对象。
+ */
+export function pickBetterVideoCard(
+  val1: NetflixVideoCardType,
+  val2: NetflixVideoCardType
+): NetflixVideoCardType {
+  // 先处理顶层字段
+  const base = deepMerge(val1, val2);
+
+  // 再单独处理 meta.other 数组，按 key 合并 val
+  if (val1.meta?.other || val2.meta?.other) {
+    const map = new Map<string, string[]>();
+
+    const collect = (other?: Array<{ key: string; val: string[] }>) => {
+      other?.forEach(({ key, val }) => {
+        const old = map.get(key) ?? [];
+        map.set(key, Array.from(new Set([...old, ...val])));
+      });
+    };
+
+    collect(val1.meta?.other);
+    collect(val2.meta?.other);
+
+    base.meta ??= {};
+    base.meta.other = Array.from(map.entries()).map(([key, val]) => ({ key, val }));
+  }
+
+  return base;
 }
