@@ -3,7 +3,7 @@
         <!-- 详情页面 没有播放器 -->
         <VideoDetail :card="detailData.card" v-if="!data.videoUrl" />
         <!-- 播放器区域 -->
-        <div v-if="data.videoUrl" class="w-full">
+        <div v-if="data.videoUrl" class="w-full ">
             <!-- 视频 -->
             <div class="w-full max-w-3xl">
                 <PlayerHls v-if="isM3u8" :data="data" class="w-full" :key="data.videoUrl" />
@@ -52,9 +52,9 @@
                 <!-- 网格自然换行 -->
                 <div class="grid gap-3" :class="`grid-cols-[repeat(auto-fill,minmax(80px,1fr))]`">
 
-                    <button v-for="(ep) in currentEpisodeList" :key="ep.href"
-                        @click="handleClickHref('/video?href=' + ep.href)"
-                        :style="(ep.href === nowHref) ? { color: 'white', backgroundColor: config.mainColor, borderColor: 'transparent' } : {}"
+                    <button v-for="(ep) in currentEpisodeList" :key="ep.href || ep.player_url"
+                        @click="handleClickHref(ep)"
+                        :style="(ep.href === nowHref || ep.player_url === nowHref) ? { color: 'white', backgroundColor: config.mainColor, borderColor: 'transparent' } : {}"
                         class="h-10 flex items-center justify-center rounded border hover:border-blue-500 hover:text-blue-500 hover:bg-transparent transition">
                         {{ ep.title }}
                     </button>
@@ -69,25 +69,30 @@ import Player from '@/components/player/Player.vue'
 import { useConfigStore } from '@/store/configStore'
 import { useVideoStore } from '@/store/videoStore'
 import { Sort } from '@element-plus/icons-vue'
-import type { VideoType } from '@/type/video'
+import type { EpisodeItem, VideoType } from '@/type/video'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 import type { NetflixVideoCardType, netflixVideoEpisodeType } from '@/type/video';
 import VideoDetail from './components/VideoDetail.vue'
 import { yhdmHref } from '@/api/yhdm'
-import { yhdmDetailExtract } from '@/utils/netfilxUtil'
+import { pickBetterVideoCard, yhdmDetailExtract } from '@/utils/netfilxUtil'
 import router from '@/router'
 import PlayerHls from '@/components/player/PlayerHls.vue'
-import { ElLoading, ElMessage } from 'element-plus'
+import { ElLoading } from 'element-plus'
+import { usefilmStore } from '@/store/filmStore'
 
 const video = useVideoStore()
 const config = useConfigStore()
 const route = useRoute()
-
+const filmStore = usefilmStore()
 const loading = ref()
 
 // 正确：同步计算
-const isM3u8 = computed(() => data.value.videoUrl.endsWith('.m3u8'))
+const isM3u8 = computed(() => {
+    const a = data.value.videoUrl.endsWith('.m3u8')
+    console.log('is m3u8', a)
+    return a;
+})
 
 const data = ref<VideoType>({
     id: '',
@@ -100,7 +105,7 @@ const detailData = reactive<{
     episode: netflixVideoEpisodeType | undefined
 }>({
     card: {
-        title: '未知',
+        title: '',
         href: ''
     },
     episode: undefined
@@ -120,8 +125,24 @@ function reverseEp() {
     reversed.value = !reversed.value
 }
 
-function handleClickHref(r: string) {
-    router.push(r)
+function handleClickHref(ep: EpisodeItem) {
+    if (ep.player_url) {
+
+        data.value.videoUrl = ep.player_url
+        if (detailData.episode && detailData.episode.activeEpisode) {
+            detailData.episode.activeEpisode = ep
+        }
+        nowHref.value = ep.player_url
+
+    } else if (ep.href) {
+        router.push({
+            path: '/video', query: {
+                href: ep.href
+            }
+        })
+    }
+
+
 }
 
 const setLoading = (option: boolean) => {
@@ -139,7 +160,7 @@ const setLoading = (option: boolean) => {
 
 let isRunning = false
 const nowHref = ref('')
-async function init(href: string, id: string) {
+async function init(href: string, id: string, direct: number = 0) {
     if (isRunning) return
     isRunning = true
 
@@ -163,21 +184,27 @@ async function init(href: string, id: string) {
         console.log('开始解析 href 里面的html的 视频')
         setLoading(true)
         try {
+            if (direct === 1) {
+                detailData.card = filmStore.filmCard as unknown as NetflixVideoCardType
+                detailData.episode = detailData.card.episodes
+                data.value.title = detailData.card.title || '未知标题'
+                data.value.describe = detailData.card.meta?.introduction || ''
+                return;
+            }
             nowHref.value = href
             const res = await yhdmHref(href as string)
             const ex = yhdmDetailExtract(res.data, href)
             if (ex.card) {
-                detailData.card = ex.card
+                detailData.card = pickBetterVideoCard(detailData.card, ex.card)
                 /* 新增：同步到 data，供模板展示 */
-                data.value.title = ex.card.title || '未知标题'
-                data.value.describe = ex.card.meta?.introduction || ''
+                data.value.title = detailData.card.title || '未知标题'
+                data.value.describe = detailData.card.meta?.introduction || ''
             }
             if (ex.episode) {
                 detailData.episode = ex.episode
             }
             if (ex.m3u8) {
                 data.value.videoUrl = ex.m3u8
-                ElMessage.info('解析成功')
             }
         } finally {
             //  延迟重置，防止并发
@@ -192,10 +219,9 @@ async function init(href: string, id: string) {
 
 /* 路由参数变化时重新加载 */
 onBeforeRouteUpdate(async (to, from, next) => {
-
     if (to.query.href !== from.query.href || to.query.id !== from.query.id) {
         console.log('onBeforeRouteUpdate init')
-        await init(to.query.href as string, to.query.id as string)
+        await init(to.query.href as string, to.query.id as string, to.query.direct ? Number(to.query.direct) : 0)
     }
     next()
 
@@ -203,7 +229,7 @@ onBeforeRouteUpdate(async (to, from, next) => {
 
 onMounted(async () => {
     console.log('onMouted init')
-    await init(route.query.href as string, route.query.id as string)
+    await init(route.query.href as string, route.query.id as string, route.query.direct ? Number(route.query.direct) : 0)
 })
 </script>
 

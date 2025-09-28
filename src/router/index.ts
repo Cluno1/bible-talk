@@ -12,6 +12,7 @@ import Video from "@/view/video/index.vue";
 import Error from "@/view/Error.vue";
 import Search from "@/view/video/Search.vue";
 import RouterView from "@/view/video/RouterView.vue";
+import OriginsTest from "@/view/test/OriginsTest.vue";
 const routes: RouteRecordRaw[] = [
   {
     path: "/home",
@@ -68,6 +69,12 @@ const routes: RouteRecordRaw[] = [
     name: "bible",
     component: Bible,
     meta: { title: "Bible", icon: "Reading", rank: 2, hidden: true }, // 不显示
+  },
+  {
+    path: "/test",
+    name: "test",
+    component: OriginsTest,
+    meta: { title: "OriginsTest", icon: "Reading", rank: 2, hidden: false }, // 不显示
   },
   {
     path: "/error",

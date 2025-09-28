@@ -11,7 +11,7 @@
             <div class="col-span-9 ">
                 <!-- 标题 + 评分 -->
                 <div class="flex items-center mb-4">
-                    <h1 class="text-3xl font-bold mr-4">{{ card.title }}</h1>
+                    <h1 class="text-3xl font-bold mr-4">{{ card.title||'未知' }}</h1>
                     <el-tag type="primary" size="large" class="px-4 py-1 !text-base">
                         评分 {{ card.score || '-' }}
                     </el-tag>

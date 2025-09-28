@@ -453,7 +453,8 @@ function handleClick() {
         }
         // ElMessage.error('找不到数据')
         router.push({
-            path: '/video/search',
+            // path: '/video/search',
+            path: '/test',
             query: {
                 kw: formatVal
             }

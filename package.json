@@ -17,6 +17,7 @@
     "@fortawesome/vue-fontawesome": "^3.1.1",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/vite": "^4.1.12",
+    "@videojs/themes": "^1.0.1",
     "@vitejs/plugin-vue-jsx": "^5.1.0",
     "@vueuse/core": "^13.7.0",
     "axios": "^1.11.0",
@@ -28,6 +29,7 @@
     "media-icons": "^1.1.5",
     "pinia": "^3.0.3",
     "tailwindcss": "^4.1.12",
+    "video.js": "^8.23.4",
     "vidstack": "^1.12.13",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue": "^3.5.18",
@@ -35,6 +37,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
+    "@types/video.js": "^7.3.58",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.21",

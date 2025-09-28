@@ -1,2 +1,17 @@
 @import "tailwindcss";
 
+/* 让播放器占满父容器，可按需调 */
+.video-js {
+    aspect-ratio: 16 / 9;
+}
+.video-js {
+  min-width: 560px;   /* 大于 512 px 即可 */
+}
+/* 2. 把默认皮肤里藏起来的按钮放出来 */
+.video-js .vjs-control-bar .vjs-volume-panel,
+.video-js .vjs-control-bar .vjs-playback-rate,
+.video-js .vjs-control-bar .vjs-picture-in-picture-control {
+  display: flex !important;
+  visibility: visible;
+  width: auto;
+}

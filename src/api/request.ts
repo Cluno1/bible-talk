@@ -5,7 +5,7 @@ import axios, {
   type AxiosError,
 } from "axios";
 import type { CustomConfig, ResData } from "@/type/request";
-import router from "@/router";
+
 
 /* ---------- 工具 ---------- */
 export function tansParams(params: any): string {
@@ -79,13 +79,13 @@ http.interceptors.response.use(
   },
   (err: AxiosError) => {
     /* 网络/HTTP 错误统一处理 */
-    router.push({
-      path: '/error',
-      query: {
-        code: '500',
-        msg: '网络或者服务器问题'
-      }
-    })
+    // router.push({
+    //   path: '/error',
+    //   query: {
+    //     code: '500',
+    //     msg: '网络或者服务器问题'
+    //   }
+    // })
     return Promise.reject(err);
   }
 );

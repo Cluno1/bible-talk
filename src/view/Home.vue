@@ -29,7 +29,8 @@
                 <svg class="icon" :style="{ 'color': config.mainColor }">
                     <use href="#icon-coffee-pink" />
                 </svg>
-                <h1>Give back to live what is live's,and have a break~</h1>
+                <h1>Give back to live what is live's,and
+                    have a break~<span @click="router.push({ path: '/test', query: { kw: '凡人' } })"> ....</span> </h1>
             </div>
 
             <div class="flex gap-2 lg:gap-9 justify-start items-center">

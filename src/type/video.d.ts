@@ -31,7 +31,7 @@ export interface NetflixPaginationType {
 export interface NetflixVideoCardType {
   videoPic?: string;
   score?: string; //评分
-  remarks?: string;
+  remarks?: string; // 如: 更新到xx集  这样的信息
   title: string;
   href: string;
   meta?: {
@@ -39,17 +39,20 @@ export interface NetflixVideoCardType {
     roles?: string[];
     category?: string;
     region?: string;
-    date?: string;
-    update?: string;
+    date?: string;  //发行的日期
+    update?: string;  //更新时间
     introduction?: string; //简介
     other?: Array<{ key: string; val: string[] }>;
   };
+  originSite?:SiteType;
+  episodes?:netflixVideoEpisodeType;
 }
 /**
  * 单集结构
  */
 export interface EpisodeItem {
-  href: string;
+  href?: string;
+  player_url?:string;
   title: string;
 }
 
@@ -62,4 +65,15 @@ export interface netflixVideoEpisodeType {
   activeEpisode?: EpisodeItem; // 当前选中的集数
   playerOriginEpisodeNum: number[]; // 每个源对应多少集
   playerOriginEpisodeList: EpisodeItem[][]; // 关键：直接是解析好的二维数组
+
+}
+//站源信息
+export interface SiteType {
+  api: string;
+  name: string;
+  detail?: string;
+  selected: boolean;
+  searchUrl?: string;
+  detailUrl?: string; //剧集详情页接口  还没有视频   后面直接加 ..
+  particularUrl?: string; //进入单独页面  必定有视频
 }
