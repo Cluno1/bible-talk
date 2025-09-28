@@ -74,7 +74,7 @@ const routes: RouteRecordRaw[] = [
     path: "/test",
     name: "test",
     component: OriginsTest,
-    meta: { title: "OriginsTest", icon: "Reading", rank: 2, hidden: false }, // 不显示
+    meta: { title: "OriginsTest", icon: "Reading", rank: 2, hidden: true }, // 不显示
   },
   {
     path: "/error",

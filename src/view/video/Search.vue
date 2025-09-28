@@ -67,8 +67,8 @@
                                     {{ card.meta?.introduction || "-" }}
                                 </div>
                                 <div class="text-xs leading-snug line-clamp-4">
-                                    <span>href：</span>
-                                    {{ card.href || '-' }}
+                                    <span>来源：</span>
+                                    {{ card.originSite?.name || '-' }}
                                 </div>
                             </div>
                         </div>
@@ -101,13 +101,13 @@
             <Transition name="slide">
                 <div v-if="showPanel" class="fixed inset-0 z-50">
                     <!-- 遮罩 -->
-                    <div class="absolute inset-0 bg-black/60" @click="showPanel = false" />
+                    <div class="absolute inset-0 bg-black/60" @click="closeClick" />
                     <!-- 面板 -->
                     <div class="absolute top-0 right-0 h-full w-80 md:w-80 border-l p-6 overflow-y-auto"
                         :style="{ backgroundColor: config.modeDark ? 'black' : 'white' }">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold gradient-text">设置</h3>
-                            <el-button link @click="showPanel = false">
+                            <el-button link @click="closeClick">
                                 <el-icon size="20">
                                     <Close />
                                 </el-icon>
@@ -197,7 +197,7 @@ const fetch = async (page = 1) => {
             selectedApiCount.value === 1 &&
             searchApis.find((i) => i.api == "https://www.yhdmtv.top")?.selected
         ) {
-            console.log("come to default");
+
             //默认源  yhdm
             const res: ResData<string> = await yhdmSearch(keyword, page);
             const { cards: c, pagination: p } = YHDMExtract(res.data);
@@ -205,22 +205,20 @@ const fetch = async (page = 1) => {
             pagination.value = p;
             return;
         } else {
-            console.log("come to simple all ");
+
             cards.value = [];
             pagination.value = { total: 1 };
             searchApis.forEach(async (i) => {
                 if (i.api == "https://www.yhdmtv.top") {
                     console.log("come to yhdm");
-
                     //默认源  yhdm
                     const res: ResData<string> = await yhdmSearch(keyword, 1);
                     const { cards: c } = YHDMExtract(res.data);
                     cards.value.push(...c);
                 } else {
-                    console.log("come to buildLibreTVUrl");
                     try {
                         const res = await buildLibreTVUrl(i, "search", { query: keyword });
-                        console.log("yes a= ", res?.data);
+
                         const { cards: c } = parseJson2Netflix(res?.data, i);
                         cards.value.push(...c);
                     } catch (err: any) {
@@ -286,6 +284,12 @@ onMounted(() => {
     init();
     fetch();
 });
+
+function closeClick() {
+    showPanel.value = false
+    ElMessage.info('重新搜索')
+    fetch();
+}
 
 function selectAllAPIs(t: boolean) {
     apiList.value.forEach((i) => {

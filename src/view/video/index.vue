@@ -1,11 +1,11 @@
 <template>
-    <div class="pb-12">
+    <div class="pb-12 ">
         <!-- 详情页面 没有播放器 -->
         <VideoDetail :card="detailData.card" v-if="!data.videoUrl" />
         <!-- 播放器区域 -->
-        <div v-if="data.videoUrl" class="w-full ">
+        <div v-if="data.videoUrl" class="flex flex-col items-center justify-center">
             <!-- 视频 -->
-            <div class="w-full max-w-3xl">
+            <div class="w-full md:w-5/6 md:min-w-[700px]">
                 <PlayerHls v-if="isM3u8" :data="data" class="w-full" :key="data.videoUrl" />
                 <Player v-if="!isM3u8" :data="data" class="w-full" :key="data.videoUrl" />
             </div>
@@ -181,7 +181,7 @@ async function init(href: string, id: string, direct: number = 0) {
             }
         }
     } else if (href) {
-        console.log('开始解析 href 里面的html的 视频')
+        // console.log('开始解析 href 里面的html的 视频')
         setLoading(true)
         try {
             if (direct === 1) {
@@ -195,7 +195,10 @@ async function init(href: string, id: string, direct: number = 0) {
             const res = await yhdmHref(href as string)
             const ex = yhdmDetailExtract(res.data, href)
             if (ex.card) {
-                detailData.card = pickBetterVideoCard(detailData.card, ex.card)
+
+                detailData.card = (pickBetterVideoCard(detailData.card, ex.card), filmStore.filmCard)
+                filmStore.filmCard = detailData.card
+                
                 /* 新增：同步到 data，供模板展示 */
                 data.value.title = detailData.card.title || '未知标题'
                 data.value.describe = detailData.card.meta?.introduction || ''

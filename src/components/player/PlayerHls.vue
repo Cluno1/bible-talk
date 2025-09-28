@@ -1,7 +1,7 @@
 <!-- PlayerHls.vue -->
 <template>
     <!-- 1. 用 Video.js 的 video 标签，class 必须带 "video-js" -->
-    <video ref="videoEl" class="video-js vjs-big-play-centered w-full" controls preload="auto" width="100%"
+    <video ref="videoEl" class="video-js md:min-w-[560px] vjs-big-play-centered w-full" controls preload="auto" width="100%"
         height="100%" playsinline />
 </template>
 
@@ -50,12 +50,11 @@ function init() {
             controlBar: {               // ← 加这段
                 volumePanel: { inline: false },     // 音量滑块（竖着）
                 playbackRateMenuButton: true,       // 倍速
-                pictureInPictureToggle: true,       // 画中画
                 currentTimeDisplay: true,           // 当前时间
                 timeDivider: true,                  // “/”
                 durationDisplay: true,              // 总时长
-                remainingTimeDisplay: false,        // 可关掉剩余时间
-                progressControl: { seekBar: true }, // 进度条
+                remainingTimeDisplay: false,        // 可关掉剩余时间  // progressControl: { seekBar: true }, // 进度条
+               
                 fullscreenToggle: true              // 全屏
             },
             sources: []
