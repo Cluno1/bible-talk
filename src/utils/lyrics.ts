@@ -1,4 +1,4 @@
-export async function loadLrc(lrcUrl: string) {
+export async function loadLrc(lrcUrl: string):Promise<LrcLine[]> {
   const res = await fetch(lrcUrl);
   if (!res.ok) throw new Error(`网络错误 ${res.status}`);
   // return parseLrc(await res.text());
@@ -42,6 +42,7 @@ export interface LrcLine {
   text: string;
   isMeta?: boolean;
 }
+
 export function parseLrcTest(raw: string): LrcLine[] {
   const lines = raw
     .split(/\r?\n/)

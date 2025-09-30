@@ -112,8 +112,8 @@
             <el-pagination background layout="prev, pager, next" hide-on-single-page :current-page="pagination.now"
                 :page-count="pagination.total" @current-change="handlePageChange" />
         </div>
-        <div v-if="loading === false && cards.length < 1" class="text-2xl text-gray-400">
-            搜索无结果~
+        <div v-if="isLoading === false && cards.length < 1" class="text-2xl text-gray-400">
+            {{ route.query.kw ? '搜索无结果~' : '支持搜索在线影视/动漫/综艺/电视剧' }}
         </div>
 
         <!-- 设置面板 -->
@@ -166,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 import { YHDMExtract } from "@/utils/netfilxUtil";
 import type { ResData } from "@/type/request";
 import type {
@@ -190,6 +190,7 @@ const cards = ref<NetflixVideoCardType[]>([]);
 const pagination = ref<NetflixPaginationType>({});
 const hoverCard = ref<NetflixVideoCardType | null>(null);
 const loading = ref<any>(null); //loading是 实例
+const isLoading = ref(false)
 const showPanel = ref(false);
 let keyword = "";
 
@@ -338,7 +339,9 @@ onMounted(() => {
     fetch();
     window.addEventListener('scroll', handleScroll);
 });
-
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll);
+})
 function closeClick() {
     showPanel.value = false
     ElMessage.info('重新搜索')
@@ -366,12 +369,14 @@ function handleClick(card: NetflixVideoCardType) {
 
 const setLoading = (option: boolean) => {
     if (option) {
+        isLoading.value = true
         loading.value = ElLoading.service({
             lock: true,
             text: "Loading",
             background: "rgba(0, 0, 0, 0.7)",
         });
     } else {
+        isLoading.value = false
         loading.value.close();
     }
 };

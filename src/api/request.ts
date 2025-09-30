@@ -69,6 +69,10 @@ http.interceptors.request.use(
 /* ---------- 响应拦截 ---------- */
 http.interceptors.response.use(
   (res: AxiosResponse<ResData>) => {
+    // 如果请求配置了 custom.noResponseInterceptor，则直接返回
+    if ((res.config as any).custom?.noResponseInterceptor) {
+      return res;
+    }
     /* 只检查业务码，不拆包，保持 AxiosResponse 外壳 */
     if (res.data.code !== 200) {
       /* 需要统一错误提示可在这里做 */
@@ -93,7 +97,7 @@ http.interceptors.response.use(
 /* ---------- 对外方法 ---------- */
 export async function request<T = any>(
   config: InternalAxiosRequestConfig & { custom?: CustomConfig }
-): Promise<ResData<T>> {
-  const axiosRes = await http.request<ResData<T>>(config);
+): Promise<ResData<T>|any> {
+  const axiosRes = await http.request<ResData<T>|any>(config);
   return axiosRes.data; // 类型就是 ResData<T>
 }

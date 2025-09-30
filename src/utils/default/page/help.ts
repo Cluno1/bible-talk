@@ -132,15 +132,28 @@ export const helpDoc: BibleTalkDataType = {
     },
     {
       id: "help-2",
-      title: "2. 补充  ",
-      subTitle: "End",
-      titleLeftColor: "#32CD32",
+      title: "2. 免责声明 ",
+      subTitle: "Disclaimer",
+      titleLeftColor: "#FF6347",
       titleColor: "#FFFFFF",
-      name: "End",
-      englishName: "end",
+      name: "Disclaimer",
+      englishName: "disclaimer",
       content: [
         {
-          paragraphs: " Give back to live what is live's,and have a break~",
+          paragraphs:
+            "本项目所使用的所有在线影视作品、动漫及音乐源，仅用于个人学习和技术交流目的，不用于任何商业用途。项目不会存储、上传或传播任何作品内容，所有资源均来自公开互联网，仅供学习参考。若有侵权请及时联系,邮箱 17875477802@163.com，将第一时间处理相关内容和纠纷。",
+        },
+        {
+          paragraphs:
+            "用户在使用本网站前，须已知悉并同意本免责声明。用户不得将本网站内容用于任何商业、非法、侵权或其他不当用途，不得以任何方式下载、传播、复制、存储或上传相关作品。因用户违反本声明而产生的法律责任，由用户自行承担。若不同意本声明，请勿使用本网站。",
+        },
+        {
+          paragraphs:
+            "All online film, anime and music sources used in this project are for personal study and technical exchange only, and are not for any commercial purpose. The project does not store, upload or distribute any content; all resources are from the public internet and are for learning reference only. If there is any infringement, please contact 17875477802@163.com and we will handle related issues as soon as possible.",
+        },
+        {
+          paragraphs:
+            "Users must be aware of and agree to this disclaimer before using this website. Users shall not use any content of this website for any commercial, illegal, infringing or other improper purposes, nor download, distribute, copy, store or upload related works in any way. Any legal liability arising from violation of this statement shall be borne by the user. If you do not agree to this statement, please do not use this website.",
         },
       ],
     },

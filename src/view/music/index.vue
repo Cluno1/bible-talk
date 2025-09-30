@@ -36,10 +36,9 @@
             <!-- 1. 封面 -->
             <div :class="['album-cover']" :style="{ 'backgroundColor': config.lightMainColor }">
 
-                <img v-if="albumPicture.length>0"
-                    :src="albumPicture[picVersion % albumPicture.length]"
+                <img v-if="albumPicture.length > 0" :src="albumPicture[picVersion % albumPicture.length]"
                     alt="Album Cover" />
-                
+
                 <div class="loading">
                     <font-awesome-icon icon="spinner" spin /> 加载中...
                 </div>
@@ -183,7 +182,7 @@ import type { MusicType } from '@/type/music'
 import { useAlbumConfigStore } from '@/store/albumStore'
 const config = useConfigStore()
 const audioConfig = useAudioConfigStore()
-const albumStore=useAlbumConfigStore()
+const albumStore = useAlbumConfigStore()
 /* ---------- 音频实例 ---------- */
 const audio = new Audio(audioConfig.getInitAudio().link)
 
@@ -195,16 +194,16 @@ const currentTime = ref(0)
 const duration = ref(0)
 const volume = ref(100)
 const lastVolume = ref(1)
-const albumPicture=computed<string[]>(()=>{
-    const _a=audioConfig.currentAudio?.pic||audioConfig.currentAudio?.albumPic||[]
-    if(_a.length>0){
-        return  _a
-    }else{
-        const _b=audioConfig.currentAudio?.album
-        if(_b){
-            const c=albumStore.searchAlbum(_b)
-            if(c.length>0){
-                return c[0].pic||[]
+const albumPicture = computed<string[]>(() => {
+    const _a = audioConfig.currentAudio?.pic || audioConfig.currentAudio?.albumPic || []
+    if (_a.length > 0) {
+        return _a
+    } else {
+        const _b = audioConfig.currentAudio?.album
+        if (_b) {
+            const c = albumStore.searchAlbum(_b)
+            if (c.length > 0) {
+                return c[0].pic || []
             }
         }
     }
@@ -295,6 +294,54 @@ watch(activeLine, () => {
 // 歌词容器和内容引用
 const lyricsContainer = ref<HTMLDivElement>()
 const lyricsContainerPc = ref<HTMLDivElement>()
+
+// 用户是否正在主动滚动歌词区域
+const isUserScrolling = ref(false)
+let scrollTimeout: any = null
+
+// PC端滚动检测
+function setupPcScrollListener() {
+    if (!lyricsContainerPc.value) return
+    const el = lyricsContainerPc.value
+    const setScrolling = () => {
+        isUserScrolling.value = true
+        if (scrollTimeout) clearTimeout(scrollTimeout)
+        scrollTimeout = setTimeout(() => {
+            isUserScrolling.value = false
+        }, 3000)
+    }
+    el.addEventListener('wheel', setScrolling)
+    el.addEventListener('mousedown', setScrolling)
+    el.addEventListener('mousemove', setScrolling)
+    el.addEventListener('touchstart', setScrolling)
+    el.addEventListener('touchmove', setScrolling)
+    el.addEventListener('touchend', () => {
+        scrollTimeout = setTimeout(() => {
+            isUserScrolling.value = false
+        }, 1000)
+    })
+}
+
+// 手机端滚动检测
+function setupMobileScrollListener() {
+    if (!lyricsContainer.value) return
+    const el = lyricsContainer.value
+    const setScrolling = () => {
+        isUserScrolling.value = true
+        if (scrollTimeout) clearTimeout(scrollTimeout)
+        scrollTimeout = setTimeout(() => {
+            isUserScrolling.value = false
+        }, 3000)
+    }
+    el.addEventListener('touchstart', setScrolling)
+    el.addEventListener('touchmove', setScrolling)
+    el.addEventListener('touchend', () => {
+        scrollTimeout = setTimeout(() => {
+            isUserScrolling.value = false
+        }, 1000)
+    })
+    el.addEventListener('wheel', setScrolling)
+}
 
 
 /* 自定义滚动函数 - 让当前行保持在可视区中间 */
@@ -461,6 +508,10 @@ onMounted(() => {
     }
 
     initPicTimer()
+    setupPcScrollListener()
+    setupMobileScrollListener()
+
+    config.defaultRouterSwitch('audio-play', true)
 })
 
 onUnmounted(() => {

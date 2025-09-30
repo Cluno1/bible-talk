@@ -1,7 +1,12 @@
 import type { MusicType } from "@/type/music";
-import { getInitLyrics, loadLrc } from "@/utils/lyrics";
+import {
+  getInitLyrics,
+  loadLrc,
+  parseLrcTest,
+  type LrcLine,
+} from "@/utils/lyrics";
 import { defineStore } from "pinia";
-import { ref, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 
 export const useAudioConfigStore = defineStore("audioConfig", () => {
   /* ---------- 数据 ---------- */
@@ -11,17 +16,35 @@ export const useAudioConfigStore = defineStore("audioConfig", () => {
   const currentAudio = ref<MusicType | null>(null); //当前歌曲
   const currentLyrics = ref<{ time: number; text: string }[]>(getInitLyrics()); //当前歌曲解析出来的歌词
 
+  const searchData = reactive({
+    searchResults: [] as MusicType[],
+    searchVal: "", //维护搜索的信息
+    total: 0, //当前页面的信息有多少条
+    pagenow: 0,
+    pagesize: 0,
+    pagecount: 1,
+  });
+
   watch(currentAudio, async (newVal) => {
+    
     if (newVal?.lyricsLink) {
       try {
         currentLyrics.value = await loadLrc(newVal.lyricsLink);
       } catch (e: any) {
         currentLyrics.value = getInitLyrics();
       }
+    } else if (newVal?.lyrics) {
+      
+      currentLyrics.value = parseLrcTest(newVal.lyrics);
+      
     } else {
       currentLyrics.value = getInitLyrics();
     }
   });
+
+  function setCurrentLyrics(val: LrcLine[]) {
+    currentLyrics.value = val;
+  }
 
   function setCurrentAudio(val: MusicType | MusicType[]) {
     if (Array.isArray(val)) {
@@ -82,5 +105,7 @@ export const useAudioConfigStore = defineStore("audioConfig", () => {
     getInitAudio,
     currentLyrics,
     removeAudio,
+    searchData,
+    setCurrentLyrics,
   };
 });

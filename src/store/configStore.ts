@@ -204,7 +204,7 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   function defaultRouterSwitch(
-    type: "setting" | "audio-play",
+    type: "setting" | "music-album" | "music-search" | "audio-play" | "video" | "video-index" | "video-search" | "bible" | "error",
     show: boolean = true
   ) {
     const ob = router.getRoutes().find((_i) => _i.name === type);

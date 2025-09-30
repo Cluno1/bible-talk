@@ -4,6 +4,39 @@
             <FullScreen />
             <GlobalSearch type="global" />
         </div>
+
+        <div class="flex flex-col gap-8 lg:gap-4">
+            <div class="flex gap-2 lg:gap-9 justify-start items-center">
+                <svg class="icon" :style="{ 'color': config.mainColor }">
+                    <use href="#icon-coffee-pink" />
+                </svg>
+                <h1>Give back to live what is live's,and
+                    have a break<span @click="router.push({ path: '/video-test', query: { kw: '凡人' } })">~</span> </h1>
+            </div>
+
+            <div class="flex gap-2 lg:gap-9 justify-start items-center">
+                <svg class="icon" :style="{ 'color': config.mainColor }">
+                    <use href="#icon-coffee-pink" />
+                </svg>
+                <h1>Don't know how to use? <span @click="handleShowHelp" class="underline"
+                        :style="{ 'color': config.mainColor }">click here for help</span>
+                </h1>
+            </div>
+            <div class="flex gap-2 lg:gap-9 justify-start items-center">
+                <svg class="icon" :style="{ 'color': config.mainColor }">
+                    <use href="#icon-coffee-pink" />
+                </svg>
+                <el-button @click="config.defaultRouterSwitch('video',true);config.defaultRouterSwitch('video-search',true);router.push('/video/search')"> 在线视频搜索
+                </el-button>
+            </div>
+            <div class="flex gap-2 lg:gap-9 justify-start items-center">
+                <svg class="icon" :style="{ 'color': config.mainColor }">
+                    <use href="#icon-coffee-pink" />
+                </svg>
+                <el-button @click="config.defaultRouterSwitch('music-search',true);router.push('/music-search')"> 在线音乐搜索
+                </el-button>
+            </div>
+        </div>
         <!-- 专辑列表 -->
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
             <el-card v-for="album in albumList" :key="album.id" shadow="hover" class="cursor-pointer"
@@ -23,24 +56,6 @@
                     </p>
                 </div>
             </el-card>
-        </div>
-        <div v-show="albumList.length == 0" class="flex flex-col gap-8 lg:gap-4">
-            <div class="flex gap-2 lg:gap-9 justify-start items-center">
-                <svg class="icon" :style="{ 'color': config.mainColor }">
-                    <use href="#icon-coffee-pink" />
-                </svg>
-                <h1>Give back to live what is live's,and
-                    have a break<span @click="router.push({ path: '/test', query: { kw: '凡人' } })">~</span> </h1>
-            </div>
-
-            <div class="flex gap-2 lg:gap-9 justify-start items-center">
-                <svg class="icon" :style="{ 'color': config.mainColor }">
-                    <use href="#icon-coffee-pink" />
-                </svg>
-                <h1>Don't know how to use? <span @click="handleShowHelp" class="underline"
-                        :style="{ 'color': config.mainColor }">click here for help</span>
-                </h1>
-            </div>
         </div>
         <div class="absolute right-0 bottom-0 ">{{ '粤ICP备2025467657号' }}</div>
 

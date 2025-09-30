@@ -1,3 +1,9 @@
+/*
+ * @Date: 2025-09-29 00:18:27
+ * @LastEditors: zld 17875477802@163.com
+ * @LastEditTime: 2025-09-30 14:35:40
+ * @FilePath: \bible-talk\src\router\index.ts
+ */
 import {
   createRouter,
   createWebHistory,
@@ -12,7 +18,6 @@ import Video from "@/view/video/index.vue";
 import Error from "@/view/Error.vue";
 import Search from "@/view/video/Search.vue";
 import RouterView from "@/view/video/RouterView.vue";
-import OriginsTest from "@/view/test/OriginsTest.vue";
 const routes: RouteRecordRaw[] = [
   {
     path: "/home",
@@ -39,6 +44,17 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: "/music-search",
+    name: "music-search",
+    component: MusicSearch,
+    meta: {
+      title: "Music Search",
+      icon: "VideoPlay",
+      rank: 20,
+      hidden: true,
+    },
+  },
+  {
     path: "/audio-play",
     name: "audio-play",
     component: Audio,
@@ -53,16 +69,21 @@ const routes: RouteRecordRaw[] = [
         path: "",
         name: "video-index",
         component: Video,
-        meta: { title: "video show", icon: "Reading", rank: 1, hidden: true }, // 不显示
+        meta: { title: "video show", icon: "MessageBox", rank: 1, hidden: true }, // 不显示
       },
       {
         path: "search",
         name: "video-search",
         component: Search,
-        meta: { title: "video search", icon: "Reading", rank: 2, hidden: true }, // 不显示
+        meta: {
+          title: "video search",
+          icon: "VideoCameraFilled",
+          rank: 2,
+          hidden: true,
+        }, // 不显示
       },
     ],
-    meta: { title: "Video Play", icon: "Headset", rank: 3, hidden: true },
+    meta: { title: "Video Play", icon: "MessageBox", rank: 3, hidden: true },
   },
   {
     path: "/bible",
@@ -71,25 +92,16 @@ const routes: RouteRecordRaw[] = [
     meta: { title: "Bible", icon: "Reading", rank: 2, hidden: true }, // 不显示
   },
   {
-    path: "/test",
-    name: "test",
-    component: OriginsTest,
-    meta: { title: "OriginsTest", icon: "Reading", rank: 2, hidden: true }, // 不显示
-  },
-  {
     path: "/error",
     name: "error",
     component: Error,
     meta: { title: "error", icon: "Reading", rank: 2, hidden: true }, // 不显示
   },
-
-  // {
-  //   path: "/yhdmtest",
-  //   name: "yhdm-test",
-  //   component: YHDMTest,
-  //   meta: { title: "YHDM Test", icon: "Reading", rank: 2, hidden: true },
-  // },
+  ...testRoutes,
 ];
+import { testRoutes } from "./test";
+import MusicSearch from "@/view/music/MusicSearch.vue";
+routes.push(...testRoutes);
 
 const router = createRouter({
   history: createWebHistory("/bible-talk/"),

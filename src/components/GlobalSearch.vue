@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useRouter, type RouteRecordNormalized } from 'vue-router';
+import { useRoute, useRouter, type RouteRecordNormalized } from 'vue-router';
 import { useBibleTalkStore } from '@/store/bibleTalkStore';
 import { useMenuStore } from '@/store/menuStore';
 import { useAlbumConfigStore } from '@/store/albumStore';
@@ -232,7 +232,7 @@ function isRemove(val: string) {
         }
     }
 }
-
+const route = useRoute()
 
 //用户输入一些东西后,可供用户选择的值... 函数
 const querySearch = (queryString: string, cb: any) => {
@@ -317,17 +317,14 @@ function handleSelect(item: GlobalSearchCallBackType) {
             const a = router.getRoutes().find(_i => _i.path === item.router)// router:/setting
             console.log(a, 'what is a')
             if (a) {
-                //default router
-                if (a.name == 'setting') {
+                //default router   
+                const defaultRouter = ["setting", "music-album", "music-search", "audio-play", "video", "video-index", "video-search", "bible", "error"];
+                const _a = defaultRouter.find(i => i === a.name)
+                if (_a) {
                     searchInput.value = ''
-                    config.defaultRouterSwitch('setting', false)
-
-                    ElMessage.success('删除页面成功')
-                } else if (a.name == 'audio-play') {
-                    searchInput.value = ''
+                    config.defaultRouterSwitch(_a as any, false)
+                    ElMessage.success('不显示页面成功')
                     loading.value = false
-                    config.defaultRouterSwitch('audio-play', false)
-                    ElMessage.success('删除音频成功')
                 } else {
                     console.log(a.name, 'name')
                     if (!config.removeRoute(a.name as string)) {
@@ -395,7 +392,7 @@ function handleSelect(item: GlobalSearchCallBackType) {
     loading.value = false;
 
 }
-
+//用户点击按钮
 function handleClick() {
     if (searchInput.value === '') {
         return
@@ -420,7 +417,6 @@ function handleClick() {
             router.push('/audio-play')
             return;
         }
-
         if (bibleTalkStore.getData(formatVal)) {
             loading.value = false
             searchInput.value = ''
@@ -451,14 +447,33 @@ function handleClick() {
             })
             return ElMessage.success('添加视频成功')
         }
-        // ElMessage.error('找不到数据')
-        router.push({
-            path: '/video/search',
-            // path: '/test',
-            query: {
-                kw: formatVal
-            }
-        })
+
+        if (route.fullPath.includes('video') || searchInput.value[0] == '%') {
+            router.push({
+                path: '/video/search',
+                // path: '/test',
+                query: {
+                    kw: formatVal
+                }
+            })
+        } else if (route.fullPath.includes('video') || searchInput.value[0] == '!') {
+            audioStore.searchData.searchVal = formatVal
+            router.push({
+                path: '/music-search',
+                query: {
+                    kw: formatVal
+                }
+            })
+        } else {
+            audioStore.searchData.searchVal = formatVal
+            router.push({
+                path: '/music-search',
+                query: {
+                    kw: formatVal
+                }
+            })
+        }
+
 
     } catch (e: any) {
 

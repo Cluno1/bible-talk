@@ -15,6 +15,8 @@ export interface CustomConfig {
   showLoading?: boolean;
   loadingMsg?: string;
   auth?: boolean;
+  /** 跳过响应拦截器 */
+  noResponseInterceptor?: boolean;
   //拓展 meta...
 }
 

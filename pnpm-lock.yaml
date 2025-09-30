@@ -53,6 +53,9 @@ importers:
       fuse.js:
         specifier: ^7.1.0
         version: 7.1.0
+      he:
+        specifier: ^1.2.0
+        version: 1.2.0
       hls.js:
         specifier: ^1.6.13
         version: 1.6.13
@@ -84,6 +87,9 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.19(typescript@5.8.3))
     devDependencies:
+      '@types/he':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@types/node':
         specifier: ^24.3.0
         version: 24.3.0
@@ -684,6 +690,9 @@ packages:
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
+
+  '@types/he@1.2.3':
+    resolution: {integrity: sha512-q67/qwlxblDzEDvzHhVkwc1gzVWxaNxeyHUBF4xElrvjL11O+Ytze+1fGpBHlr/H9myiBUaUXNnNPmBHxxfAcA==}
 
   '@types/lodash-es@4.17.12':
     resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
@@ -2927,6 +2936,8 @@ snapshots:
   '@trysound/sax@0.2.0': {}
 
   '@types/estree@1.0.8': {}
+
+  '@types/he@1.2.3': {}
 
   '@types/lodash-es@4.17.12':
     dependencies:

@@ -160,7 +160,7 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
   }
 
   /**
-   * 模糊查询,不会查询 联网
+   * 模糊查询,仅仅查本地, 不会查询联网
    * 先用 val 当 id 查；查不到再用 val 当歌曲名称查
    */
   function searchMusicByVal(v: string): MusicType[] {
@@ -189,7 +189,7 @@ export const useAlbumConfigStore = defineStore("albumConfig", () => {
 
   /**
    * 严格查询
-   * 查询歌曲 通过id 联网查询
+   * 查询歌曲 通过id 联网查询 自己资源
    * @param id
    */
   function searchMusicById(v: string): MusicType | undefined {
