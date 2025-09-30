@@ -166,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { YHDMExtract } from "@/utils/netfilxUtil";
 import type { ResData } from "@/type/request";
 import type {
