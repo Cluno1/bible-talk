@@ -1,6 +1,24 @@
 <!-- NetflixGrid.vue -->
 <template>
-    <div class="originSearch p-8 mb-7 h-screen overflow-scroll">
+    <div class="w-full lg:hidden flex flex-col items-center justify-center ">
+        <!-- 手机端设置 -->
+        <div class="z-30  mb-5 flex items-center justify-center ">
+            <el-button type="plain" size="large" @click="showPanel = true">
+                <el-icon>
+                    <Setting />
+                </el-icon>
+            </el-button>
+            <GlobalSearch type="global" />
+        </div>
+        <div v-if="showScrollTop" class="backTop fixed right-[24px] bottom-[24px] z-30 lg:hidden">
+            <el-button @click="scrollToTop">
+                <el-icon>
+                    <Top />
+                </el-icon>
+            </el-button>
+        </div>
+    </div>
+    <div class="originSearch p-8 mb-7 h-screen overflow-scroll" ref="originSearch">
         <!-- 设置按钮保留在右上角，并缩小尺寸 -->
         <el-affix :offset="120" z-index="30" class="hidden md:block">
             <div class="fixed right-[24px] top-[120px] z-30">
@@ -18,38 +36,28 @@
                 </el-popover>
             </div>
         </el-affix>
-        <el-backtop target=".originSearch" :visibility-height="50" :right="24" :bottom="80">
+        <!-- 桌面端回到顶部按钮 -->
+        <el-backtop target=".originSearch" :visibility-height="50" :right="24" :bottom="80" class="hidden md:block">
             <el-icon>
                 <Top />
             </el-icon>
         </el-backtop>
 
-        <!-- 手机端 -->
-        <div class="md:hidden mb-5 flex items-center justify-center">
-            <el-button type="plain" size="large" @click="showPanel = true">
-                <el-icon>
-                    <Setting />
-                </el-icon>
-            </el-button>
-
-            <GlobalSearch type="global" />
-        </div>
         <!-- 卡片网格 -->
         <section class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[28px]">
-            <el-card shadow="hover" class="relative w-40 sm:w-64 hover:scale-105" v-for="(card, idx) in cards"
+            <el-card shadow="hover" class="relative w-32 sm:w-64 hover:scale-105" v-for="(card, idx) in cards"
                 :key="idx" @mouseenter="hoverCard = card" @mouseleave="hoverCard = null" @click="handleClick(card)">
                 <span class="absolute right-4 bottom-1 text-xl" :style="{ color: config.darkMainColor }">
                     {{ card.score }}
                 </span>
 
-                <div class="h-44 w-32 sm:h-80 sm:w-60 sm:pr-6">
-                    <div class="relative h-44 sm:h-80">
+                <div class="h-24 w-20 sm:h-80 sm:w-60 sm:pr-6">
+                    <div class="relative h-36 sm:h-80">
                         <!-- 封面 -->
-                        <img class="h-44 sm:h-80 max-w-60 w-full object-cover"
+                        <img class="h-24 sm:h-80 max-w-60 w-full object-cover"
                             :src="card.videoPic || 'https://via.placeholder.com/200x280'" alt="" />
-
                         <div v-if="hoverCard === card" class="absolute max-h-80 max-w-60 inset-0 bg-black/50">
-                            <div class="h-3/5 flex flex-col justify-between text-gray-300 p-3 rounded">
+                            <div class=" flex flex-col justify-between text-gray-300 p-3 rounded">
                                 <div class="text-xs mb-1">
                                     <span>导演：</span>
                                     {{ card.meta?.director || "-" }}
@@ -57,6 +65,18 @@
                                 <div class="text-xs mb-1 line-clamp-2">
                                     <span>主演：</span>
                                     {{ card.meta?.roles?.join(" / ") || "-" }}
+                                </div>
+                                <div class="text-xs mb-1">
+                                    <span>分类：</span>
+                                    {{ card.meta?.category || "-" }}
+                                </div>
+                                <div class="text-xs mb-1">
+                                    <span>地区：</span>
+                                    {{ card.meta?.region || "-" }}
+                                </div>
+                                <div class="text-xs mb-1">
+                                    <span>发行日期：</span>
+                                    {{ card.meta?.date || "-" }}
                                 </div>
                                 <div class="text-xs mb-1">
                                     <span>更新时间：</span>
@@ -142,10 +162,11 @@
             </Transition>
         </Teleport>
     </div>
+
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import { YHDMExtract } from "@/utils/netfilxUtil";
 import type { ResData } from "@/type/request";
 import type {
@@ -172,6 +193,12 @@ const loading = ref<any>(null); //loading是 实例
 const showPanel = ref(false);
 let keyword = "";
 
+// 回到顶部相关状态
+const showScrollTop = ref(false);
+const originSearch = ref<HTMLElement>();
+
+
+
 //数据搜索源
 const apiList = ref<SiteType[]>([]);
 const selectedApiCount = ref(
@@ -179,6 +206,29 @@ const selectedApiCount = ref(
         return apiList.value.filter((i) => i.selected).length;
     })
 );
+
+// 自定义回到顶部函数
+const scrollToTop = () => {
+    if (originSearch.value) {
+        originSearch.value.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+};
+
+// 监听滚动事件，控制回到顶部按钮显示/隐藏
+watch(originSearch, (newVal) => {
+    if (newVal) {
+        newVal.addEventListener('scroll', handleScroll);
+    }
+});
+const handleScroll = () => {
+    console.log(originSearch.value?.scrollTop);
+    if (originSearch.value) {
+        showScrollTop.value = originSearch.value.scrollTop > 300;
+    }
+};
 
 watch(selectedApiCount, () => {
     localStorage.setItem("originSetting", JSON.stringify(apiList.value));
@@ -240,25 +290,27 @@ function init() {
         keyword = _kw as string;
     }
 
-    Object.keys(API_SITES).forEach((key) => {
-        apiList.value.push({
-            selected: false,
-            ...API_SITES[key as keyof typeof API_SITES],
-        });
-    });
 
-    const str = localStorage.getItem("originSetting"); //SiteType
-    const originSetting: SiteType[] = str ? JSON.parse(str) : null; // 解析失败也返回 null
-    if (originSetting) {
-        originSetting.forEach((i) => {
-            const a = apiList.value.find((j) => i.name === j.name && i.api === j.api);
-            if (a) {
-                a.selected = i.selected || false;
-            } else {
-                apiList.value?.push(i);
-            }
-        });
-    }
+    // Object.keys(API_SITES).forEach((key) => {
+    //     apiList.value.push({
+    //         selected: false,
+    //         ...API_SITES[key as keyof typeof API_SITES],
+    //     });
+    // });
+
+    // const str = localStorage.getItem("originSetting"); //SiteType
+    // const originSetting: SiteType[] = str ? JSON.parse(str) : null; // 解析失败也返回 null
+    // if (originSetting) {
+    //     originSetting.forEach((i) => {
+    //         const a = apiList.value.find((j) => i.name === j.name && i.api === j.api);
+    //         if (a) {
+    //             a.selected = i.selected || false;
+    //         } else {
+    //             apiList.value?.push(i);
+    //         }
+    //     });
+    // }
+    apiList.value.push(API_SITES.default)
 }
 
 /* 页码变化 */
@@ -280,9 +332,11 @@ onBeforeRouteUpdate(async (to, from, next) => {
     next();
 });
 
+// 合并后的onMounted函数
 onMounted(() => {
     init();
     fetch();
+    window.addEventListener('scroll', handleScroll);
 });
 
 function closeClick() {
