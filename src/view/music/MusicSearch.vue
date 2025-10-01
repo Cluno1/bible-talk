@@ -87,6 +87,10 @@
             <div class="text-base  truncate" :style="{ color: config.textColor }">{{ item.songTitle }}</div>
             <div class="text-xs text-gray-500 mt-1">{{ item.artistName }}</div>
           </div>
+          <div class="min-w-0">
+
+            <div class="text-xs text-gray-500 mt-1">源:{{ item.meta?.source || '' }}</div>
+          </div>
 
           <!-- 更多按钮 -->
           <el-dropdown trigger="click" placement="bottom-end" @click.stop.native>
@@ -108,9 +112,7 @@
                   </el-icon>Add List
                 </el-dropdown-item>
 
-                <el-dropdown-item @click.stop="getMusicDetail(item, 'next')">
-                  from:{{ item.meta?.source || '' }}
-                </el-dropdown-item>
+
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -147,7 +149,8 @@
 
             <!-- 数据源 -->
             <div class="p-3 rounded-lg shadow-inner mb-4">
-              <label class="block text-sm font-medium text-gray-400 mb-3 border-b border-[#333] pb-1">数据源设置</label>
+              <label
+                class="block text-sm font-medium text-gray-400 mb-3 border-b border-[#333] pb-1">数据源设置:在测试阶段,为了避免封id仅仅推荐每次选择一个源</label>
               <div class="flex space-x-2 mb-3">
                 <el-button size="small" @click="selectAllAPIs(true)">全选</el-button>
                 <el-button size="small" @click="selectAllAPIs(false)">全不选</el-button>
@@ -257,6 +260,8 @@ const setLoading = (option: boolean) => {
   }
 };
 
+
+let onSearch = false
 // 处理搜索
 async function _handleSearch(kw: string = '', page: number = 1) {
   const val = kw || audioStore.searchData.searchVal
@@ -265,8 +270,12 @@ async function _handleSearch(kw: string = '', page: number = 1) {
   }
 
   try {
-    ElMessage.info('搜索中...');
     setLoading(true)
+    if (onSearch) {
+      return;
+    }
+
+    onSearch = true
 
     audioStore.searchData.searchResults = []
     audioStore.searchData.total = 0
@@ -284,7 +293,7 @@ async function _handleSearch(kw: string = '', page: number = 1) {
         console.log(list, 'list')
         if (list.length < 1) {
 
-          ElMessage.info(i.source + '源暂无数据')
+          // ElMessage.info(i.source + '源暂无数据')
           return;
         }
         audioStore.searchData.total += list.length
@@ -313,6 +322,7 @@ async function _handleSearch(kw: string = '', page: number = 1) {
     console.error('搜索失败:', error);
   } finally {
     setLoading(false)
+    onSearch = false
   }
 }
 
@@ -387,24 +397,45 @@ onBeforeRouteUpdate(async (to, from, next) => {
   next();
 });
 
-onMounted(() => {
-  apiSources.value = GDSources.map(i => ({ source: i, selected: false }))
-  apiSources.value[0].selected = true;
 
-  const _i = localStorage.getItem('musicSources')
-  if (_i) {
-    apiSources.value = JSON.parse(_i).map((i: { source: any; selected: any; }) => {
-      const _so = apiSources.value.find(j => i.source === j.source)
-      if (_so) {
-        _so.selected = i.selected
-        return _so
-      }
-      return {
-        source: i?.source,
-        selected: i?.selected || false
-      }
-    })
+
+// 类型声明
+type SourceItem = { source: string; selected: boolean };
+
+/* 初始化数据源（默认全不选） */
+const createDefaultSources = (): SourceItem[] =>
+  GDSources.map(source => ({ source, selected: false }));
+
+/* 从 localStorage 恢复选中状态 */
+const restoreSources = (stored: string | null): SourceItem[] => {
+  if (!stored) return createDefaultSources();
+
+  let parsed: SourceItem[];
+  try {
+    parsed = JSON.parse(stored);
+    if (!Array.isArray(parsed)) throw new Error('invalid format');
+  } catch {
+    return createDefaultSources();
   }
+
+  // 用 Map 索引默认列表，复杂度 O(n)
+  const defaultMap = new Map(
+    GDSources.map((s, _) => [s, { source: s, selected: false }])
+  );
+
+  // 用存储的数据覆盖选中状态
+  return parsed.map(item => {
+    const hit = defaultMap.get(item.source as any);
+    return hit
+      ? { ...hit, selected: Boolean(item.selected) }
+      : { source: item.source, selected: Boolean(item.selected) };
+  });
+};
+
+
+
+onMounted(() => {
+  apiSources.value = restoreSources(localStorage.getItem('musicSources'));
 
   const a = route.query.kw
   if (a || audioStore.searchData.searchVal) {
