@@ -29,9 +29,10 @@
         </el-backtop>
 
         <el-table :data="audioStore.searchData.searchResults" border style="width: 100%">
-          <el-table-column prop="songTitle" label="名称" min-width="200" />
+          <el-table-column prop="songTitle" label="名称" min-width="250" />
           <el-table-column prop="artistName" label="歌手" min-width="120" />
           <el-table-column prop="album" label="专辑" min-width="150" />
+          <el-table-column prop="meta.source" label="源" min-width="50" />
           <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
               <div class="flex justify-center gap-2">
@@ -77,7 +78,7 @@
       class=" mt-6 block md:hidden">
       <div class="mobileShow space-y-3" ref="mobileShow">
         <div v-for="(item, idx) in audioStore.searchData.searchResults" :key="item.id"
-          class="flex items-center px-3 py-2 rounded border border-gray-200" >
+          class="flex items-center px-3 py-2 rounded border border-gray-200">
           <!-- 数字序号 -->
           <span class="w-8 text-center text-gray-400 text-sm">{{ idx + 1 }}</span>
 
@@ -105,6 +106,10 @@
                   <el-icon class="mr-2">
                     <Flag />
                   </el-icon>Add List
+                </el-dropdown-item>
+
+                <el-dropdown-item @click.stop="getMusicDetail(item, 'next')">
+                  from:{{ item.meta?.source || '' }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -181,6 +186,8 @@ import { tranMusicType } from '@/utils/tranMusicType';
 import { ElLoading, ElMessage } from 'element-plus';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
+import { throttleHook } from '@/utils/optimize';
+import { isAudioUrl } from '@/utils/audioutls';
 const audioStore = useAudioConfigStore()
 const albumStore = useAlbumConfigStore()
 const loading = ref()
@@ -251,7 +258,7 @@ const setLoading = (option: boolean) => {
 };
 
 // 处理搜索
-async function handleSearch(kw: string = '', page: number = 1) {
+async function _handleSearch(kw: string = '', page: number = 1) {
   const val = kw || audioStore.searchData.searchVal
   if (!val || !selectedSourcesCount) {
     return;
@@ -299,8 +306,6 @@ async function handleSearch(kw: string = '', page: number = 1) {
 
 
     })
-
-
     audioStore.searchData.pagecount = page + 1
 
   } catch (error) {
@@ -311,6 +316,7 @@ async function handleSearch(kw: string = '', page: number = 1) {
   }
 }
 
+const handleSearch = throttleHook(_handleSearch, 5000)
 
 //用户点击播放 | 加入播放列表
 async function getMusicDetail(music: MusicType, type: 'now' | 'next') {
@@ -320,8 +326,8 @@ async function getMusicDetail(music: MusicType, type: 'now' | 'next') {
     console.log('音乐播放链接:', urlRes.url);
     music.link = urlRes.url;
     //再决定要不要加入 TODO
-    if (!music.link) {
-      ElMessage.error('获取音乐播放源失败')
+    if (!music.link || !isAudioUrl(music.link)) {
+      ElMessage.error(music.meta?.source || 'netease' + '源的' + music.songTitle + '获取失败')
       return
     }
 
@@ -330,16 +336,20 @@ async function getMusicDetail(music: MusicType, type: 'now' | 'next') {
     ElMessage.error('获取音乐详情失败')
     return;
   }
-  console.log(music, 'music item')
   try {
-    const picRes = await getMusicPic({ id: music.meta.pic_id, source: music.meta?.source })
-    const lyricRes = await getMusicLyric<any>({ id: music.meta?.lyric_id, source: music.meta?.source || 'netease' });
-    console.log('图片', picRes?.url)
-    music.pic = [picRes?.url];
-    console.log('歌词:', lyricRes.lyric || lyricRes.tlyric);// 直链
-    music.lyrics = lyricRes.lyric || lyricRes.tlyric;
-    music.meta = {
-      tlyric: lyricRes.tlyric//存储 翻译后歌词,文本形式
+    if (music.meta && music.meta.pic_id) {
+      const picRes = await getMusicPic({ id: music.meta.pic_id, source: music.meta?.source || 'netease' })
+      console.log('封面', picRes?.url)
+      music.pic = [picRes?.url];
+    }
+    if (music.meta?.lyric_id) {
+      const lyricRes = await getMusicLyric<any>({ id: music.meta?.lyric_id, source: music.meta?.source || 'netease' });
+
+      console.log('歌词:', lyricRes.lyric || lyricRes.tlyric);// 直链
+      music.lyrics = lyricRes.lyric || lyricRes.tlyric;
+      music.meta = {
+        tlyric: lyricRes.tlyric//存储 翻译后歌词,文本形式
+      }
     }
   } catch (err) {
     console.error('获取信息失败', err)
@@ -384,6 +394,11 @@ onMounted(() => {
   const _i = localStorage.getItem('musicSources')
   if (_i) {
     apiSources.value = JSON.parse(_i).map((i: { source: any; selected: any; }) => {
+      const _so = apiSources.value.find(j => i.source === j.source)
+      if (_so) {
+        _so.selected = i.selected
+        return _so
+      }
       return {
         source: i?.source,
         selected: i?.selected || false
@@ -392,13 +407,13 @@ onMounted(() => {
   }
 
   const a = route.query.kw
-  if (a) {
+  if (a || audioStore.searchData.searchVal) {
 
     if (a == audioStore.searchData.searchVal && audioStore.searchData.searchResults.length > 0) {
       return;
     }
     audioStore.searchData.searchVal = a as string;
-    handleSearch()
+    handleSearch(audioStore.searchData.searchVal, 1)
   }
   window.addEventListener('scroll', handleScroll);
 })
