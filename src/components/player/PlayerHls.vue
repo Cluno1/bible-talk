@@ -80,13 +80,10 @@ function init() {
         setTimeout(() => (isInit = false), 500)
     })
 }
-
 /* -------------------- 监听 url 变化 -------------------- */
 watch(() => props.data.videoUrl, init, { immediate: true })
-
 /* -------------------- 生命周期 -------------------- */
 onMounted(init)
-
 onUnmounted(() => {
     nextTick(() => {
         hls?.destroy()
@@ -96,6 +93,4 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-
-
 </style>

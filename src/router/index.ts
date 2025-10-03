@@ -69,7 +69,12 @@ const routes: RouteRecordRaw[] = [
         path: "",
         name: "video-index",
         component: Video,
-        meta: { title: "video show", icon: "MessageBox", rank: 1, hidden: true }, // 不显示
+        meta: {
+          title: "video show",
+          icon: "MessageBox",
+          rank: 1,
+          hidden: false,
+        }, // 不显示
       },
       {
         path: "search",
@@ -83,7 +88,7 @@ const routes: RouteRecordRaw[] = [
         }, // 不显示
       },
     ],
-    meta: { title: "Video Play", icon: "MessageBox", rank: 3, hidden: true },
+    meta: { title: "Video Play", icon: "MessageBox", rank: 3, hidden: false },
   },
   {
     path: "/bible",

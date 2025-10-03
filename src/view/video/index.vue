@@ -6,8 +6,9 @@
         <div v-if="data.videoUrl" class="flex flex-col items-center justify-center">
             <!-- 视频 -->
             <div class="w-full md:w-5/6 md:min-w-[700px]">
-                <PlayerHls v-if="isM3u8" :data="data" class="w-full" :key="data.videoUrl" />
-                <Player v-if="!isM3u8" :data="data" class="w-full" :key="data.videoUrl" />
+                <PlayerHls v-if="videoUrlType === 'm3u8'" :data="data" class="w-full" :key="data.videoUrl" />
+                <Player v-if="videoUrlType === 'mp4'" :data="data" class="w-full" :key="data.videoUrl" />
+                <PlayerHtml v-if="videoUrlType === 'html'" :data="data" class="w-full" :key="data.videoUrl"/>
             </div>
             <!-- 详情 -->
             <div class="w-full px-4 py-6 flex flex-col items-center gap-4 text-center">
@@ -80,6 +81,7 @@ import router from '@/router'
 import PlayerHls from '@/components/player/PlayerHls.vue'
 import { ElLoading } from 'element-plus'
 import { usefilmStore } from '@/store/filmStore'
+import PlayerHtml from '@/components/player/PlayerHtml.vue'
 
 const video = useVideoStore()
 const config = useConfigStore()
@@ -88,10 +90,18 @@ const filmStore = usefilmStore()
 const loading = ref()
 
 // 正确：同步计算
-const isM3u8 = computed(() => {
-    const a = data.value.videoUrl.endsWith('.m3u8')
-    console.log('is m3u8', a)
-    return a;
+const videoUrlType = computed((): 'm3u8' | 'html' | 'mp4' => {
+    let result: 'm3u8' | 'html' | 'mp4' = 'mp4';
+
+    if (data.value.videoUrl.endsWith('.m3u8')) {
+        result = 'm3u8'
+    } else if (data.value.videoUrl.endsWith('.mp4')) {
+        result = 'mp4'
+    } else {
+        result = 'html'
+    }
+
+    return result;
 })
 
 const data = ref<VideoType>({
@@ -198,7 +208,7 @@ async function init(href: string, id: string, direct: number = 0) {
 
                 detailData.card = (pickBetterVideoCard(detailData.card, ex.card), filmStore.filmCard)
                 filmStore.filmCard = detailData.card
-                
+
                 /* 新增：同步到 data，供模板展示 */
                 data.value.title = detailData.card.title || '未知标题'
                 data.value.describe = detailData.card.meta?.introduction || ''
@@ -231,7 +241,7 @@ onBeforeRouteUpdate(async (to, from, next) => {
 })
 
 onMounted(async () => {
-    console.log('onMouted init')
+    console.log('onMouted init ?????')
     await init(route.query.href as string, route.query.id as string, route.query.direct ? Number(route.query.direct) : 0)
 })
 </script>
