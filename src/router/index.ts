@@ -51,7 +51,7 @@ const routes: RouteRecordRaw[] = [
       title: "Music Search",
       icon: "VideoPlay",
       rank: 20,
-      hidden: false,
+      hidden: true,
     },
   },
   {
@@ -84,11 +84,11 @@ const routes: RouteRecordRaw[] = [
           title: "video search",
           icon: "VideoCameraFilled",
           rank: 2,
-          hidden: false,
+          hidden: true,
         }, // 不显示
       },
     ],
-    meta: { title: "Video Play", icon: "MessageBox", rank: 3, hidden: false },
+    meta: { title: "Video Play", icon: "MessageBox", rank: 3, hidden: true },
   },
   {
     path: "/bible",

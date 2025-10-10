@@ -51,7 +51,7 @@
         </div>
 
 
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-4 mb-10">
             <div v-for="(page, index) in localPublicPages" :key="page.id" class="flex items-start gap-3"
                 @click="onRouterPage(page)">
                 <!-- 序号 -->
@@ -61,22 +61,22 @@
 
                 <!-- 内容 -->
                 <div class="flex-1">
-                    <h1 class="text-xl font-bold mb-1">{{ page.title }}</h1>
-                    <p class="text-gray-600">{{ page.subTitle }}</p>
+                    <span class=" font-bold mb-1">{{ page.title }}</span>
+                    <span class="text-[0.8rem] text-gray-600">{{ page.subTitle }}</span>
                 </div>
             </div>
         </div>
 
 
         <!-- 专辑列表 -->
-        <div class="flex gap-2 lg:gap-9 justify-start items-center" v-if="albumList.length > 0">
+        <div class="flex gap-2 lg:gap-9 justify-start items-center mb-6" v-if="albumList.length > 0">
             <svg class="icon" :style="{ 'color': config.mainColor }">
                 <use href="#icon-coffee-pink" />
             </svg>
             <h1>专辑列表</h1>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-10">
             <el-card v-for="album in albumList" :key="album.id" shadow="hover" class="cursor-pointer"
                 @click="hanAlbumRouter(album)">
                 <!-- 封面 -->
@@ -98,7 +98,7 @@
 
 
 
-        <div class="absolute right-0 bottom-0 ">{{ '粤ICP备2025467657号' }}</div>
+        <div class="fixed right-0 bottom-0 ">{{ '粤ICP备2025467657号' }}</div>
 
     </div>
 </template>
@@ -122,7 +122,6 @@ const bibleTalkStore = useBibleTalkStore()
 
 
 
-
 /* 把 Map 转成数组，供模板 v-for 使用 */
 const albumList = computed<MusicAlbum[]>(() => {
     console.log(albumConfigStore.albumsVersion, 'album version update by home page')//不要删除
@@ -130,12 +129,17 @@ const albumList = computed<MusicAlbum[]>(() => {
 }
 );
 
-
-
-
 function onRouterPage(page: BibleTalkDataType) {
-    const a = bibleTalkStore.getData(page.id)
-    console.log(a, 'a')
+    try {
+        const a = bibleTalkStore.getData(page.id)
+        if (a) {
+            ElMessage.success('页面添加成功')
+        }
+    } catch (err: any) {
+        ElMessage.info(err.message)
+    }
+
+
 }
 
 function handleShowHelp() {

@@ -448,6 +448,11 @@ function handleClick() {
             return ElMessage.success('添加视频成功')
         }
 
+        if (route.fullPath.endsWith('home')) {
+            loading.value = false
+            return ElMessage.error('暂无该搜索资源,请检查搜索是否正确')
+        }
+
         if (route.fullPath.includes('video') || searchInput.value[0] == '%') {
             router.push({
                 path: '/video/search',
@@ -456,7 +461,7 @@ function handleClick() {
                     kw: formatVal
                 }
             })
-        } else if (route.fullPath.includes('video') || searchInput.value[0] == '!') {
+        } else if (route.fullPath.includes('music') || searchInput.value[0] == '!') {
             audioStore.searchData.searchVal = formatVal
             router.push({
                 path: '/music-search',
@@ -474,12 +479,13 @@ function handleClick() {
             })
         }
 
-
     } catch (e: any) {
 
         ElMessage.error(e.message || '搜索错误')
+    } finally {
+        loading.value = false
     }
-    loading.value = false;
+
 }
 
 </script>
