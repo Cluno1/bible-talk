@@ -51,7 +51,7 @@ const routes: RouteRecordRaw[] = [
       title: "Music Search",
       icon: "VideoPlay",
       rank: 20,
-      hidden: true,
+      hidden: false,
     },
   },
   {
@@ -73,7 +73,7 @@ const routes: RouteRecordRaw[] = [
           title: "video show",
           icon: "MessageBox",
           rank: 1,
-          hidden: false,
+          hidden: true,
         }, // 不显示
       },
       {
@@ -84,7 +84,7 @@ const routes: RouteRecordRaw[] = [
           title: "video search",
           icon: "VideoCameraFilled",
           rank: 2,
-          hidden: true,
+          hidden: false,
         }, // 不显示
       },
     ],

@@ -1,7 +1,7 @@
 import { request } from "./request";
 
-export function yhdmRender(url: string) {
-  return request<string>({
+export function yhdmRender<T = any>(url: string): Promise<T> {
+  return request<T>({
     url: "https://coup-online.fun:3002" + "/render",
     method: "GET",
     params: {

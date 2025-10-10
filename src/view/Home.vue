@@ -5,7 +5,7 @@
             <GlobalSearch type="global" />
         </div>
 
-        <div class="flex flex-col gap-8 lg:gap-4">
+        <div class="flex flex-col gap-8 lg:gap-4 mb-10">
             <div class="flex gap-2 lg:gap-9 justify-start items-center">
                 <svg class="icon" :style="{ 'color': config.mainColor }">
                     <use href="#icon-coffee-pink" />
@@ -26,18 +26,56 @@
                 <svg class="icon" :style="{ 'color': config.mainColor }">
                     <use href="#icon-coffee-pink" />
                 </svg>
-                <el-button @click="config.defaultRouterSwitch('video',true);config.defaultRouterSwitch('video-search',true);router.push('/video/search')"> 在线视频搜索
+                <el-button
+                    @click="config.defaultRouterSwitch('video', true); config.defaultRouterSwitch('video-search', true); router.push('/video/search')">
+                    在线视频搜索
                 </el-button>
             </div>
             <div class="flex gap-2 lg:gap-9 justify-start items-center">
                 <svg class="icon" :style="{ 'color': config.mainColor }">
                     <use href="#icon-coffee-pink" />
                 </svg>
-                <el-button @click="config.defaultRouterSwitch('music-search',true);router.push('/music-search')"> 在线音乐搜索
+                <el-button @click="config.defaultRouterSwitch('music-search', true); router.push('/music-search')">
+                    在线音乐搜索
                 </el-button>
             </div>
         </div>
+
+
+        <!-- 公开文章 -->
+        <div class="flex gap-2 lg:gap-9 justify-start items-center mb-6">
+            <svg class="icon" :style="{ 'color': config.mainColor }">
+                <use href="#icon-coffee-pink" />
+            </svg>
+            <h1>公开文章</h1>
+        </div>
+
+
+        <div class="flex flex-col gap-4">
+            <div v-for="(page, index) in localPublicPages" :key="page.id" class="flex items-start gap-3"
+                @click="onRouterPage(page)">
+                <!-- 序号 -->
+                <span class="text-lg font-semibold" :style="{ color: config.mainColor }">
+                    {{ (index + 1).toString().padStart(2, '0') }}
+                </span>
+
+                <!-- 内容 -->
+                <div class="flex-1">
+                    <h1 class="text-xl font-bold mb-1">{{ page.title }}</h1>
+                    <p class="text-gray-600">{{ page.subTitle }}</p>
+                </div>
+            </div>
+        </div>
+
+
         <!-- 专辑列表 -->
+        <div class="flex gap-2 lg:gap-9 justify-start items-center" v-if="albumList.length > 0">
+            <svg class="icon" :style="{ 'color': config.mainColor }">
+                <use href="#icon-coffee-pink" />
+            </svg>
+            <h1>专辑列表</h1>
+        </div>
+
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
             <el-card v-for="album in albumList" :key="album.id" shadow="hover" class="cursor-pointer"
                 @click="hanAlbumRouter(album)">
@@ -57,6 +95,9 @@
                 </div>
             </el-card>
         </div>
+
+
+
         <div class="absolute right-0 bottom-0 ">{{ '粤ICP备2025467657号' }}</div>
 
     </div>
@@ -72,10 +113,14 @@ import router from '@/router';
 import { useConfigStore } from '@/store/configStore';
 import { useBibleTalkStore } from '@/store/bibleTalkStore';
 import { ElMessage } from 'element-plus';
+import { localPublicPages } from '@/utils/default/page';
+import type { BibleTalkDataType } from '@/type/page';
 
 const albumConfigStore = useAlbumConfigStore();
 const config = useConfigStore()
 const bibleTalkStore = useBibleTalkStore()
+
+
 
 
 /* 把 Map 转成数组，供模板 v-for 使用 */
@@ -84,6 +129,14 @@ const albumList = computed<MusicAlbum[]>(() => {
     return Array.from(albumConfigStore.albums.values())
 }
 );
+
+
+
+
+function onRouterPage(page: BibleTalkDataType) {
+    const a = bibleTalkStore.getData(page.id)
+    console.log(a, 'a')
+}
 
 function handleShowHelp() {
     console.log('help  --72')

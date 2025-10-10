@@ -8,7 +8,7 @@
             <div class="w-full md:w-5/6 md:min-w-[700px]">
                 <PlayerHls v-if="videoUrlType === 'm3u8'" :data="data" class="w-full" :key="data.videoUrl" />
                 <Player v-if="videoUrlType === 'mp4'" :data="data" class="w-full" :key="data.videoUrl" />
-                <PlayerHtml v-if="videoUrlType === 'html'" :data="data" class="w-full" :key="data.videoUrl"/>
+                <PlayerHtml v-if="videoUrlType === 'html'" :data="data" class="w-full" :key="data.videoUrl" />
             </div>
             <!-- 详情 -->
             <div class="w-full px-4 py-6 flex flex-col items-center gap-4 text-center">
@@ -93,7 +93,7 @@ const loading = ref()
 const videoUrlType = computed((): 'm3u8' | 'html' | 'mp4' => {
     let result: 'm3u8' | 'html' | 'mp4' = 'mp4';
 
-    if (data.value.videoUrl.endsWith('.m3u8')) {
+    if (data.value.videoUrl.includes('.m3u8')) {
         result = 'm3u8'
     } else if (data.value.videoUrl.endsWith('.mp4')) {
         result = 'mp4'
@@ -241,7 +241,12 @@ onBeforeRouteUpdate(async (to, from, next) => {
 })
 
 onMounted(async () => {
-    console.log('onMouted init ?????')
+
+    if (route.query.videoUrl) {
+        data.value.videoUrl = route.query.videoUrl as string
+       
+    }
+
     await init(route.query.href as string, route.query.id as string, route.query.direct ? Number(route.query.direct) : 0)
 })
 </script>

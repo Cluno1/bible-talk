@@ -139,7 +139,7 @@ onMounted(() => {
 
 function handleClick(card: NetflixVideoCardType) {
     router.push({
-        path: '/video',
+        path: '',
         query: {
             href: card.href
         }
