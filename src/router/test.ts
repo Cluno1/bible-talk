@@ -2,7 +2,6 @@ import MusicDemo from "@/test/music/MusicDemo.vue";
 import OriginsTest from "@/view/test/OriginsTest.vue";
 import { type RouteRecordRaw } from "vue-router";
 import LyricsDemo1 from "@/test/lyrics/demo1.vue";
-// import Buling from "@/view/test/Buling.vue";
 export const testRoutes: RouteRecordRaw[] = [
   {
     path: "/musictest",
@@ -23,10 +22,4 @@ export const testRoutes: RouteRecordRaw[] = [
     component: LyricsDemo1,
     meta: { title: "test demo1", icon: "Reading", rank: 2, hidden: true }, // 不显示
   },
-  // {
-  //   path: "/test-buling",
-  //   name: "testbuling",
-  //   component: Buling,
-  //   meta: { title: "buling", icon: "Reading", rank: 2, hidden: true }, // 不显示
-  // },
 ];
